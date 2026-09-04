@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="style.css">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
@@ -20,7 +19,7 @@
 
     <!-- Liquid Glass Camera HUD -->
     <div id="hud-container" class="glass-ui">
-        <video id="input_video" style="display: none;" autoplay playsinline></video>
+        <video id="input_video" autoplay playsinline></video>
         <canvas id="output_canvas" width="240" height="180"></canvas>
         <div id="loading-hud">SENSING...</div>
     </div>
