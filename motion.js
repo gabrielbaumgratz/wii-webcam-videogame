@@ -20,18 +20,52 @@ function applySensitivity(val) {
     return Math.max(0, Math.min(1, s));
 }
 
+const HAND_CONNECTIONS = [
+    [0, 1], [1, 2], [2, 3], [3, 4],
+    [0, 5], [5, 6], [6, 7], [7, 8],
+    [5, 9], [9, 10], [10, 11], [11, 12],
+    [9, 13], [13, 14], [14, 15], [15, 16],
+    [13, 17], [17, 18], [18, 19], [19, 20],
+    [0, 17]
+];
+
+window.isPaused = false;
+window.lastPinchStatePause = false;
+
 function onResults(results) {
-    if (loadingHud.style.display !== 'none') loadingHud.style.display = 'none';
-
-    // LIMPEZA ABSOLUTA: Não desenhamos mais o frame do vídeo na CPU!
-    // O vídeo já aparece lá trás nativamente por CSS na Placa de Vídeo.
-    // Desenhamos SÓ os pontinhos brilhantes!
+    canvasCtx.save();
     canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+    canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
+    
+    // Desenho do Esqueleto Cyberpunk!
+    if (results.multiHandLandmarks) {
+        canvasCtx.lineWidth = 2;
+        for (const landmarks of results.multiHandLandmarks) {
+            // Linhas Neon Cyan
+            canvasCtx.strokeStyle = '#00ffcc';
+            for (const connection of HAND_CONNECTIONS) {
+                const p1 = landmarks[connection[0]];
+                const p2 = landmarks[connection[1]];
+                canvasCtx.beginPath();
+                canvasCtx.moveTo(p1.x * canvasElement.width, p1.y * canvasElement.height);
+                canvasCtx.lineTo(p2.x * canvasElement.width, p2.y * canvasElement.height);
+                canvasCtx.stroke();
+            }
+            // Juntas Neon Pink
+            canvasCtx.fillStyle = '#ff00ff';
+            for (const p of landmarks) {
+                canvasCtx.beginPath();
+                canvasCtx.arc(p.x * canvasElement.width, p.y * canvasElement.height, 3, 0, 2 * Math.PI);
+                canvasCtx.fill();
+            }
+        }
+    }
 
-    if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+    let rawHands = results.multiHandLandmarks;
+    if (rawHands && rawHands.length > 0) {
         window.isHandPresent = true;
         
-        let handsData = results.multiHandLandmarks.map(landmarks => {
+        let handsData = rawHands.map(landmarks => {
             return { x: landmarks[8].x, y: landmarks[8].y, marks: landmarks };
         });
 
@@ -51,11 +85,13 @@ function onResults(results) {
             window.isPinching1 = false;
         }
         
-        // Ponto super rápido
-        canvasCtx.fillStyle = window.isPinching1 ? '#e60012' : '#ffffff';
-        canvasCtx.beginPath();
-        canvasCtx.arc(index1.x * canvasElement.width, index1.y * canvasElement.height, 4, 0, Math.PI*2);
-        canvasCtx.fill();
+        // Lógica de Pausa no Jogo
+        if (window.activeGame && window.isPinching1 && !window.lastPinchStatePause) {
+            window.isPaused = !window.isPaused;
+            let pauseEl = document.getElementById('pause-text');
+            if(pauseEl) pauseEl.style.display = window.isPaused ? 'block' : 'none';
+        }
+        window.lastPinchStatePause = window.isPinching1;
 
         if (handsData.length > 1) {
             window.isSecondHandPresent = true;

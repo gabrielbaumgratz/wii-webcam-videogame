@@ -234,7 +234,7 @@ function stopPong3D() {
 }
 
 function updatePong3D() {
-    if(!pongActive || pongShowingWin || isGoalPause) return;
+    if(!pongActive || pongShowingWin || isGoalPause || window.isPaused) return;
 
     let targetZ2 = (window.hand1Y - 0.5) * 20; 
     paddle2.position.z += (targetZ2 - paddle2.position.z) * 0.4; 

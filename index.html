@@ -134,12 +134,13 @@
 
         <!-- IN-GAME HUD -->
         <div id="game-ui-screen" class="screen">
-            <button class="wii-btn back-btn glass-ui" onclick="backToMenu()" data-i18n="btn_abort">ABORTER PROTOCOLO</button>
+            <button class="wii-btn back-btn" onclick="backToMenu()" data-i18n="btn_abort">ABORTER PROTOCOLO</button>
             <div id="score-board" style="display: none; width: 100%; justify-content: space-between; position: absolute; top: 50px; padding: 0 100px; box-sizing: border-box; font-size: 6em; font-weight: 800; pointer-events: none; text-shadow: 0 0 20px #000;">
                 <span id="p1-score-txt" style="color: #FF3333; text-shadow: 0 0 20px #FF3333;">0</span>
                 <span id="p2-score-txt" style="color: #3366FF; text-shadow: 0 0 20px #3366FF;">0</span>
             </div>
             <div id="winner-text" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 5em; font-weight: 800; color: white; text-shadow: 0 0 30px #ffffff; text-align: center; text-transform: uppercase;"></div>
+            <div id="pause-text" style="display: none; position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); font-size: 6em; font-weight: 800; color: #00ffcc; text-shadow: 0 0 30px #00ffcc; letter-spacing: 10px;">PAUSADO</div>
         </div>
 
     </div>
