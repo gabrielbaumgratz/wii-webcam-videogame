@@ -13,6 +13,15 @@
 </head>
 <body>
     
+    <!-- Background Floaters (Decorations) -->
+    <div class="bg-floaters">
+        <span class="floater f1">🎮</span>
+        <span class="floater f2">✋</span>
+        <span class="floater f3">📷</span>
+        <span class="floater f4">✨</span>
+        <span class="floater f5">🎮</span>
+    </div>
+
     <!-- Global WebGL Container -->
     <div id="webgl-container"></div>
 
@@ -112,10 +121,10 @@
             <div class="glass-ui" style="padding: 40px; text-align: center; width: 80%; margin-bottom: 40px;">
                 <h2 data-i18n="diff_title">Nível de Dificuldade</h2>
                 <div class="menu-layout row" id="difficulty-options">
-                    <button class="wii-btn glass-ui selected" onclick="setGameDifficulty(1, 5, this)" data-i18n="diff_easy">Fácil (5pts)</button>
-                    <button class="wii-btn glass-ui" onclick="setGameDifficulty(1.5, 10, this)" data-i18n="diff_med">Médio (10pts)</button>
-                    <button class="wii-btn glass-ui" onclick="setGameDifficulty(2, 15, this)" data-i18n="diff_hard">Difícil (15pts)</button>
-                    <button class="wii-btn glass-ui" onclick="setGameDifficulty(3, 20, this)" style="color: #ff3366; border-color: #ff3366;" data-i18n="diff_ext">EXTREMO (20pts)</button>
+                    <button class="wii-btn selected" onclick="setGameDifficulty(1, 10, this)" data-i18n="diff_easy">Fácil (10pts)</button>
+                    <button class="wii-btn" onclick="setGameDifficulty(1.5, 20, this)" data-i18n="diff_med">Médio (20pts)</button>
+                    <button class="wii-btn" onclick="setGameDifficulty(2, 30, this)" data-i18n="diff_hard">Difícil (30pts)</button>
+                    <button class="wii-btn" onclick="setGameDifficulty(3, 40, this)" style="color: #ff3366; border-color: #ff3366;" data-i18n="diff_ext">EXTREMO (40pts)</button>
                 </div>
             </div>
 

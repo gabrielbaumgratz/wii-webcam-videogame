@@ -125,7 +125,8 @@ function initPong3D() {
     particlesMesh.visible = false;
     gridHelper.visible = false;
     
-    camera.position.set(0, 18, 28);
+    // Vista Superior (2D) - como pedido
+    camera.position.set(0, 35, 0);
     camera.lookAt(0, -2, 0);
     
     p1Score = 0; p2Score = 0;
@@ -136,11 +137,10 @@ function initPong3D() {
     
     bX = 0; bZ = 0;
     
-    // Extremo é muito rápido!
-    let baseSpeed = window.difficultyMultiplier >= 3 ? 0.6 : 0.4;
+    let baseSpeed = window.difficultyMultiplier >= 3 ? 0.8 : 0.5;
     
     bSpeedX = (Math.random() > 0.5 ? baseSpeed : -baseSpeed) * (window.difficultyMultiplier > 1 ? 1.5 : 1);
-    bSpeedZ = (Math.random() > 0.5 ? 0.2 : -0.2) * window.difficultyMultiplier;
+    bSpeedZ = (Math.random() > 0.5 ? 0.3 : -0.3) * window.difficultyMultiplier;
     
     pongActive = true;
     pongShowingWin = false;
@@ -163,21 +163,38 @@ function updatePong3D() {
     if(!pongActive || pongShowingWin) return;
 
     let targetZ2 = (window.hand1Y - 0.5) * 20; 
-    paddle2.position.z += (targetZ2 - paddle2.position.z) * 0.3; // Resposta mais rápida
+    paddle2.position.z += (targetZ2 - paddle2.position.z) * 0.4; 
     if(paddle2.position.z < -8.5) paddle2.position.z = -8.5;
     if(paddle2.position.z > 8.5) paddle2.position.z = 8.5;
 
     if (window.playersMode === 2) {
         let targetZ1 = (window.hand2Y - 0.5) * 20;
-        paddle1.position.z += (targetZ1 - paddle1.position.z) * 0.3;
+        paddle1.position.z += (targetZ1 - paddle1.position.z) * 0.4;
     } else {
-        // Velocidade da IA escala com a dificuldade
-        let speedIA = 0.25 * window.difficultyMultiplier;
-        if (window.difficultyMultiplier >= 3) speedIA = 0.8; // Bot hardcore
+        // IA Muito Mais Esperta
+        let speedIA = 0.4 * window.difficultyMultiplier;
+        let predictionZ = bZ;
         
-        if(paddle1.position.z < bZ - 1) paddle1.position.z += speedIA;
-        if(paddle1.position.z > bZ + 1) paddle1.position.z -= speedIA;
+        // Se a bola está vindo na direção da IA, ela prevê onde vai bater
+        if (bSpeedX < 0) {
+            let timeToImpact = Math.abs((paddle1.position.x - bX) / bSpeedX);
+            predictionZ = bZ + (bSpeedZ * timeToImpact);
+            
+            // Simula rebotes na parede na predição
+            if (predictionZ < -9.5) predictionZ = -9.5 + Math.abs(predictionZ + 9.5);
+            if (predictionZ > 9.5) predictionZ = 9.5 - Math.abs(predictionZ - 9.5);
+        } else {
+            // Volta pro meio
+            predictionZ = 0;
+            speedIA = 0.2;
+        }
+
+        if (window.difficultyMultiplier >= 3) speedIA = 1.2; // Extremamente Rápido
+        
+        if(paddle1.position.z < predictionZ - 0.5) paddle1.position.z += speedIA;
+        if(paddle1.position.z > predictionZ + 0.5) paddle1.position.z -= speedIA;
     }
+    
     if(paddle1.position.z < -8.5) paddle1.position.z = -8.5;
     if(paddle1.position.z > 8.5) paddle1.position.z = 8.5;
 
@@ -188,19 +205,20 @@ function updatePong3D() {
 
     if (bZ < -9.5 || bZ > 9.5) bSpeedZ = -bSpeedZ;
 
-    if (bX < -16.5 && bX > -19) {
+    // Colisões melhoradas com as raquetes
+    if (bX < -16.5 && bX > -19 && bSpeedX < 0) {
         if (Math.abs(bZ - paddle1.position.z) < 3.0) {
-            bSpeedX = Math.abs(bSpeedX); 
-            bSpeedZ += (bZ - paddle1.position.z) * 0.15; 
+            bSpeedX = Math.abs(bSpeedX) + 0.05; // Acelera um pouco
+            bSpeedZ += (bZ - paddle1.position.z) * 0.2; 
         }
     } else if (bX < -20) {
         p2Score++; resetPongBall3D();
     }
 
-    if (bX > 16.5 && bX < 19) {
+    if (bX > 16.5 && bX < 19 && bSpeedX > 0) {
         if (Math.abs(bZ - paddle2.position.z) < 3.0) {
-            bSpeedX = -Math.abs(bSpeedX); 
-            bSpeedZ += (bZ - paddle2.position.z) * 0.15;
+            bSpeedX = -Math.abs(bSpeedX) - 0.05; 
+            bSpeedZ += (bZ - paddle2.position.z) * 0.2;
         }
     } else if (bX > 20) {
         p1Score++; resetPongBall3D();

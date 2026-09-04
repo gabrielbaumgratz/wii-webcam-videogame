@@ -19,7 +19,7 @@ const translations = {
         mode_1p: "1 Jogador (Vs Máquina)",
         mode_2p: "2 Jogadores (Tela Dividida)",
         diff_title: "Dificuldade",
-        diff_easy: "Fácil (5pts)", diff_med: "Médio (10pts)", diff_hard: "Difícil (15pts)", diff_ext: "EXTREMO (20pts)",
+        diff_easy: "Fácil (10pts)", diff_med: "Médio (20pts)", diff_hard: "Difícil (30pts)", diff_ext: "EXTREMO (40pts)",
         btn_launch: "INICIAR JOGO",
         btn_abort: "SAIR DO JOGO",
         game_offline: "JOGO INDISPONÍVEL NO MOMENTO"
@@ -41,7 +41,7 @@ const translations = {
         mode_1p: "1 Player (Vs CPU)",
         mode_2p: "2 Players (Split-Screen)",
         diff_title: "Difficulty",
-        diff_easy: "Easy (5pts)", diff_med: "Medium (10pts)", diff_hard: "Hard (15pts)", diff_ext: "EXTREME (20pts)",
+        diff_easy: "Easy (10pts)", diff_med: "Medium (20pts)", diff_hard: "Hard (30pts)", diff_ext: "EXTREME (40pts)",
         btn_launch: "START GAME",
         btn_abort: "QUIT GAME",
         game_offline: "GAME CURRENTLY UNAVAILABLE"
@@ -63,7 +63,7 @@ const translations = {
         mode_1p: "1 Jugador (Vs CPU)",
         mode_2p: "2 Jugadores (Pantalla Dividida)",
         diff_title: "Dificultad",
-        diff_easy: "Fácil (5pts)", diff_med: "Medio (10pts)", diff_hard: "Difícil (15pts)", diff_ext: "EXTREMO (20pts)",
+        diff_easy: "Fácil (10pts)", diff_med: "Medio (20pts)", diff_hard: "Difícil (30pts)", diff_ext: "EXTREMO (40pts)",
         btn_launch: "INICIAR JUEGO",
         btn_abort: "SALIR DEL JUEGO",
         game_offline: "JUEGO NO DISPONIBLE"
@@ -85,7 +85,7 @@ const translations = {
         mode_1p: "1 Spieler (Vs CPU)",
         mode_2p: "2 Spieler (Splitscreen)",
         diff_title: "Schwierigkeit",
-        diff_easy: "Leicht (5 Pkt)", diff_med: "Mittel (10 Pkt)", diff_hard: "Schwer (15 Pkt)", diff_ext: "EXTREM (20 Pkt)",
+        diff_easy: "Leicht (10 Pkt)", diff_med: "Mittel (20 Pkt)", diff_hard: "Schwer (30 Pkt)", diff_ext: "EXTREM (40 Pkt)",
         btn_launch: "SPIEL STARTEN",
         btn_abort: "SPIEL BEENDEN",
         game_offline: "SPIEL DERZEIT NICHT VERFÜGBAR"
