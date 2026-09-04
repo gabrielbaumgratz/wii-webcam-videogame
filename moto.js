@@ -110,12 +110,4 @@ function drawMoto() {
     mCtx.fillStyle = 'white';
     mCtx.font = '24px Arial';
     mCtx.fillText("Score: " + mScore, 20, 40);
-
-    if (mGameOver) {
-        mCtx.fillStyle = '#e94560';
-        mCtx.font = '40px Arial';
-        mCtx.fillText("BATEU!", 330, 150);
-        mCtx.font = '20px Arial';
-        mCtx.fillText("Clique no Menu para voltar", 280, 190);
-    }
 }

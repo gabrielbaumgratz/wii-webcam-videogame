@@ -116,18 +116,14 @@ function drawTennis() {
     tenCtx.beginPath();
     tenCtx.moveTo(250, 250); tenCtx.lineTo(550, 250);
     tenCtx.lineTo(700, 400); tenCtx.lineTo(100, 400);
-    tenCtx.fill();
-
-    tenCtx.strokeStyle = 'white';
-    tenCtx.beginPath(); tenCtx.moveTo(200, 250); tenCtx.lineTo(600, 250); tenCtx.stroke();
-    for(let i=200; i<=600; i+=20) tenCtx.strokeRect(i, 230, 20, 20);
-
+    tenCtx.clearRect(0, 0, tenCvs.width, tenCvs.height);
+    
     if (showingWinScreenTennis) {
-        tenCtx.fillStyle = 'rgba(0,0,0,0.7)';
-        tenCtx.fillRect(0, 0, 800, 400);
         tenCtx.fillStyle = 'white';
-        tenCtx.font = '40px Arial';
-        tenCtx.fillText(tennisWinner, 250, 200);
+        tenCtx.font = '30px Outfit';
+        tenCtx.textAlign = 'center';
+        let winnerText = (tScore1 >= 4) ? "System Wins Game!" : "User Wins Game!";
+        tenCtx.fillText(winnerText, 400, 200);
         return;
     }
 

@@ -2,13 +2,12 @@ window.difficultyMultiplier = 1;
 window.maxScore = 5;
 window.sensitivity = 1.2;
 window.activeGame = null;
-window.playersMode = 1; // 1 ou 2
+window.playersMode = 1;
 
-// Funções para atualizar os textos de configuração
 function updateConfigText() {
-    let diffName = window.maxScore === 5 ? "Fácil" : (window.maxScore === 10 ? "Médio" : "Difícil");
-    let sensName = window.sensitivity === 0.8 ? "Baixa" : (window.sensitivity === 1.2 ? "Normal" : "Alta");
-    document.getElementById('current-diff-text').innerText = `Atual: ${diffName} (${window.maxScore} pts) | Sensibilidade: ${sensName}`;
+    let diffName = window.maxScore === 5 ? "Light" : (window.maxScore === 10 ? "Standard" : "Intense");
+    let sensName = window.sensitivity === 0.8 ? "Low" : (window.sensitivity === 1.2 ? "Balanced" : "High");
+    document.getElementById('current-diff-text').innerText = `Current: ${diffName} (${window.maxScore} pts) | Sensitivity: ${sensName}`;
 }
 
 function navTo(screenId) {
@@ -42,7 +41,7 @@ function backToMenu() {
 }
 
 // ==========================================
-// MOUSE VIRTUAL (DWELL CLICK)
+// FUTURISTIC VIRTUAL CURSOR (Liquid Energy)
 // ==========================================
 const cursorCanvas = document.getElementById('cursor-canvas');
 const cursorCtx = cursorCanvas.getContext('2d');
@@ -61,13 +60,18 @@ const DWELL_TIME = 1500;
 function updateCursor() {
     cursorCtx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
     
-    // Para navegação, vamos usar sempre a mão 1 (a primeira que aparece ou a da direita)
     if (window.isHandPresent) {
         let cx = (1 - window.hand1X) * cursorCanvas.width;
         let cy = window.hand1Y * cursorCanvas.height;
 
         let elements = document.elementsFromPoint(cx, cy);
         let foundBtn = elements.find(el => el.classList && el.classList.contains('wii-btn'));
+
+        // Motion trail / soft glow variables
+        let coreRadius = 6;
+        let ringRadius = 24;
+        let accentColor = '#AFED91'; // Accent Green
+        let atmosColor = '#486496';  // Atmospheric Blue
 
         if (foundBtn) {
             if (hoverTarget !== foundBtn) {
@@ -79,17 +83,26 @@ function updateCursor() {
                 let elapsed = performance.now() - hoverStartTime;
                 let progress = Math.min(elapsed / DWELL_TIME, 1);
                 
+                // Active / Gesture state (Compression and Glow)
+                ringRadius = 24 - (progress * 4); // Rings compress slightly
+                coreRadius = 6 + (progress * 2);
+
+                // Dwell Progress Ring (Accent Green)
                 cursorCtx.beginPath();
-                cursorCtx.arc(cx, cy, 35, -Math.PI/2, (-Math.PI/2) + (Math.PI * 2 * progress));
-                cursorCtx.strokeStyle = '#00ff00';
-                cursorCtx.lineWidth = 6;
+                cursorCtx.arc(cx, cy, 32, -Math.PI/2, (-Math.PI/2) + (Math.PI * 2 * progress));
+                cursorCtx.strokeStyle = accentColor;
+                cursorCtx.lineWidth = 4;
+                cursorCtx.lineCap = 'round';
                 cursorCtx.stroke();
 
                 if (progress >= 1) {
+                    // Interaction trigger
                     hoverTarget.click();
                     hoverTarget.classList.remove('hovering');
                     hoverTarget = null; 
                     hoverStartTime = performance.now() + 1500;
+                    
+                    // Ripple effect could be added here
                 }
             }
         } else {
@@ -99,13 +112,27 @@ function updateCursor() {
             }
         }
 
+        // Draw the digital entity cursor
+        
+        // 1. Soft outer blur (Glass glow)
+        cursorCtx.shadowBlur = 15;
+        cursorCtx.shadowColor = hoverTarget ? accentColor : atmosColor;
+        
+        // 2. Translucent outer ring
         cursorCtx.beginPath();
-        cursorCtx.arc(cx, cy, 15, 0, Math.PI*2);
-        cursorCtx.fillStyle = 'rgba(0, 191, 255, 0.9)';
+        cursorCtx.arc(cx, cy, ringRadius, 0, Math.PI*2);
+        cursorCtx.fillStyle = hoverTarget ? 'rgba(175, 237, 145, 0.15)' : 'rgba(72, 100, 150, 0.2)';
         cursorCtx.fill();
-        cursorCtx.strokeStyle = 'white';
-        cursorCtx.lineWidth = 3;
+        cursorCtx.strokeStyle = hoverTarget ? 'rgba(175, 237, 145, 0.6)' : 'rgba(255, 255, 255, 0.3)';
+        cursorCtx.lineWidth = 1.5;
         cursorCtx.stroke();
+
+        // 3. Solid glowing core
+        cursorCtx.shadowBlur = 0; // Reset shadow for core
+        cursorCtx.beginPath();
+        cursorCtx.arc(cx, cy, coreRadius, 0, Math.PI*2);
+        cursorCtx.fillStyle = hoverTarget ? accentColor : '#FFFFFF';
+        cursorCtx.fill();
     }
     
     requestAnimationFrame(updateCursor);
