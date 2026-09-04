@@ -2,93 +2,94 @@
 // LOCALIZATION (i18n)
 // ==========================================
 const translations = {
+const translations = {
     pt: {
         subtitle: "EDIÇÃO CYBER GREEN",
-        enter_system: "ENTRAR NO SISTEMA",
-        global_settings: "CONFIG. GLOBAIS",
-        sys_config_title: "Configuração do Sistema",
+        enter_system: "JOGAR",
+        global_settings: "CONFIGURAÇÕES",
+        sys_config_title: "Configurações",
         cam_sens_title: "Sensibilidade da Câmera",
-        cam_sens_desc: "Ajusta o quanto sua mão real move o cursor.",
+        cam_sens_desc: "Ajusta a velocidade do cursor e da sua mão no jogo.",
         sens_low: "Baixa", sens_balanced: "Normal", sens_high: "Alta",
         btn_back: "VOLTAR",
-        select_module: "Selecionar Módulo",
-        hockey_desc: "Entre no Grid.",
+        select_module: "Selecionar Jogo",
+        hockey_desc: "Hóquei de Mesa 3D",
         tennis_title: "TÊNIS DE QUADRA",
         coming_soon: "Em Breve",
         players_title: "Jogadores",
         mode_1p: "1 Jogador (Vs Máquina)",
         mode_2p: "2 Jogadores (Tela Dividida)",
-        diff_title: "Nível de Dificuldade",
+        diff_title: "Dificuldade",
         diff_easy: "Fácil (5pts)", diff_med: "Médio (10pts)", diff_hard: "Difícil (15pts)", diff_ext: "EXTREMO (20pts)",
-        btn_launch: "INICIAR PROTOCOLO",
-        btn_abort: "ABORTAR PROTOCOLO",
-        game_offline: "SISTEMA OFFLINE PARA ATUALIZAÇÕES"
+        btn_launch: "INICIAR JOGO",
+        btn_abort: "SAIR DO JOGO",
+        game_offline: "JOGO INDISPONÍVEL NO MOMENTO"
     },
     en: {
         subtitle: "CYBER GREEN EDITION",
-        enter_system: "ENTER SYSTEM",
-        global_settings: "GLOBAL SETTINGS",
-        sys_config_title: "System Configuration",
+        enter_system: "PLAY",
+        global_settings: "SETTINGS",
+        sys_config_title: "Settings",
         cam_sens_title: "Camera Sensitivity",
-        cam_sens_desc: "Adjusts how much your physical hand moves the cursor.",
-        sens_low: "Low", sens_balanced: "Balanced", sens_high: "High",
+        cam_sens_desc: "Adjusts cursor and hand speed in-game.",
+        sens_low: "Low", sens_balanced: "Normal", sens_high: "High",
         btn_back: "BACK",
-        select_module: "Select Module",
-        hockey_desc: "Enter the Grid.",
+        select_module: "Select Game",
+        hockey_desc: "3D Air Hockey",
         tennis_title: "COURT TENNIS",
         coming_soon: "Coming Soon",
         players_title: "Players",
-        mode_1p: "1 Player (Vs System)",
+        mode_1p: "1 Player (Vs CPU)",
         mode_2p: "2 Players (Split-Screen)",
-        diff_title: "Difficulty Level",
+        diff_title: "Difficulty",
         diff_easy: "Easy (5pts)", diff_med: "Medium (10pts)", diff_hard: "Hard (15pts)", diff_ext: "EXTREME (20pts)",
-        btn_launch: "LAUNCH PROTOCOL",
-        btn_abort: "ABORT PROTOCOL",
-        game_offline: "SYSTEM OFFLINE FOR UPGRADES"
+        btn_launch: "START GAME",
+        btn_abort: "QUIT GAME",
+        game_offline: "GAME CURRENTLY UNAVAILABLE"
     },
     es: {
         subtitle: "EDICIÓN CYBER GREEN",
-        enter_system: "ENTRAR AL SISTEMA",
-        global_settings: "AJUSTES GLOBALES",
-        sys_config_title: "Configuración del Sistema",
+        enter_system: "JUGAR",
+        global_settings: "AJUSTES",
+        sys_config_title: "Ajustes",
         cam_sens_title: "Sensibilidad de Cámara",
-        cam_sens_desc: "Ajusta cuánto mueve el cursor tu mano física.",
+        cam_sens_desc: "Ajusta la velocidad de tu mano en el juego.",
         sens_low: "Baja", sens_balanced: "Normal", sens_high: "Alta",
         btn_back: "VOLVER",
-        select_module: "Seleccionar Módulo",
-        hockey_desc: "Entra a la Red.",
+        select_module: "Seleccionar Juego",
+        hockey_desc: "Hockey de Mesa 3D",
         tennis_title: "TENIS DE CANCHA",
         coming_soon: "Próximamente",
         players_title: "Jugadores",
-        mode_1p: "1 Jugador (Vs Máquina)",
+        mode_1p: "1 Jugador (Vs CPU)",
         mode_2p: "2 Jugadores (Pantalla Dividida)",
-        diff_title: "Nivel de Dificultad",
+        diff_title: "Dificultad",
         diff_easy: "Fácil (5pts)", diff_med: "Medio (10pts)", diff_hard: "Difícil (15pts)", diff_ext: "EXTREMO (20pts)",
-        btn_launch: "INICIAR PROTOCOLO",
-        btn_abort: "ABORTAR PROTOCOLO",
-        game_offline: "SISTEMA DESCONECTADO PARA MEJORAS"
+        btn_launch: "INICIAR JUEGO",
+        btn_abort: "SALIR DEL JUEGO",
+        game_offline: "JUEGO NO DISPONIBLE"
     },
     de: {
         subtitle: "CYBER GREEN EDITION",
-        enter_system: "SYSTEM STARTEN",
-        global_settings: "GLOBALE EINSTELLUNGEN",
-        sys_config_title: "Systemkonfiguration",
+        enter_system: "SPIELEN",
+        global_settings: "EINSTELLUNGEN",
+        sys_config_title: "Einstellungen",
         cam_sens_title: "Kamera-Empfindlichkeit",
-        cam_sens_desc: "Passt an, wie stark deine Hand den Cursor bewegt.",
+        cam_sens_desc: "Passt die Geschwindigkeit deiner Hand im Spiel an.",
         sens_low: "Niedrig", sens_balanced: "Normal", sens_high: "Hoch",
         btn_back: "ZURÜCK",
-        select_module: "Modul Auswählen",
-        hockey_desc: "Betritt das Grid.",
+        select_module: "Spiel Auswählen",
+        hockey_desc: "3D Air Hockey",
         tennis_title: "PLATZTENNIS",
         coming_soon: "Demnächst",
         players_title: "Spieler",
-        mode_1p: "1 Spieler (Vs System)",
+        mode_1p: "1 Spieler (Vs CPU)",
         mode_2p: "2 Spieler (Splitscreen)",
-        diff_title: "Schwierigkeitsgrad",
-        diff_easy: "Einfach (5 Pkt)", diff_med: "Mittel (10 Pkt)", diff_hard: "Schwer (15 Pkt)", diff_ext: "EXTREM (20 Pkt)",
-        btn_launch: "PROTOKOLL STARTEN",
-        btn_abort: "PROTOKOLL ABBRECHEN",
-        game_offline: "SYSTEM OFFLINE FÜR UPDATES"
+        diff_title: "Schwierigkeit",
+        diff_easy: "Leicht (5 Pkt)", diff_med: "Mittel (10 Pkt)", diff_hard: "Schwer (15 Pkt)", diff_ext: "EXTREM (20 Pkt)",
+        btn_launch: "SPIEL STARTEN",
+        btn_abort: "SPIEL BEENDEN",
+        game_offline: "SPIEL DERZEIT NICHT VERFÜGBAR"
     }
 };
 
@@ -266,8 +267,6 @@ function updateCursor() {
         cursorCtx.stroke();
 
         // Draw Solid Glowing Core
-        cursorCtx.shadowBlur = 15;
-        cursorCtx.shadowColor = accentColor;
         cursorCtx.beginPath();
         cursorCtx.arc(cx, cy, coreRadius, 0, Math.PI*2);
         cursorCtx.fillStyle = '#FFFFFF';
@@ -278,3 +277,6 @@ function updateCursor() {
     requestAnimationFrame(updateCursor);
 }
 updateCursor();
+
+// Initialize language on load
+setLang('pt');

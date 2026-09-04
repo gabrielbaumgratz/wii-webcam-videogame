@@ -50,30 +50,39 @@ gridHelper2.material.transparent = true;
 scene.add(gridHelper2);
 
 // ==========================================
-// AMBIENTE DO PONG 3D
+// AMBIENTE DO PONG 3D (STANDARD COLORS)
 // ==========================================
 const pongGroup = new THREE.Group();
 pongGroup.visible = false;
 scene.add(pongGroup);
 
-// Mesa
+// Mesa (Campo)
 const tableGeo = new THREE.BoxGeometry(40, 1, 20);
-const tableMat = new THREE.MeshPhongMaterial({ color: 0x0a2e12, transparent: true, opacity: 0.9 });
+const tableMat = new THREE.MeshPhongMaterial({ color: 0x111111, transparent: true, opacity: 0.95 }); // Chão Escuro
 const table = new THREE.Mesh(tableGeo, tableMat);
 table.position.y = -2;
 pongGroup.add(table);
 
-// Bordas brilhantes
+// Bordas brilhantes (Campo esportivo neutro)
 const edges = new THREE.LineSegments(
     new THREE.EdgesGeometry(tableGeo),
-    new THREE.LineBasicMaterial({ color: 0xAFED91, linewidth: 3 })
+    new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 })
 );
 table.add(edges);
 
-// Raquetes
-const paddleGeo = new THREE.BoxGeometry(1.5, 2.5, 4.5); // Raquetes um pouco maiores
-const p1Mat = new THREE.MeshPhongMaterial({ color: 0xAFED91, emissive: 0xAFED91, emissiveIntensity: 0.8 }); // Green
-const p2Mat = new THREE.MeshPhongMaterial({ color: 0xFFFFFF, emissive: 0xAAAAAA, emissiveIntensity: 0.5 }); // White
+// Linha central
+const centerLineGeo = new THREE.BoxGeometry(0.5, 1.2, 20);
+const centerLineMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+const centerLine = new THREE.Mesh(centerLineGeo, centerLineMat);
+centerLine.position.y = -2;
+pongGroup.add(centerLine);
+
+// Raquetes (Time Vermelho e Time Azul)
+const paddleGeo = new THREE.BoxGeometry(1.5, 2.5, 4.5);
+// P1 (Esquerda / Máquina ou Player 1) -> TIME VERMELHO
+const p1Mat = new THREE.MeshPhongMaterial({ color: 0xFF3333, emissive: 0xFF3333, emissiveIntensity: 0.6 }); 
+// P2 (Direita / Usuário ou Player 2) -> TIME AZUL
+const p2Mat = new THREE.MeshPhongMaterial({ color: 0x3366FF, emissive: 0x3366FF, emissiveIntensity: 0.6 }); 
 
 const paddle1 = new THREE.Mesh(paddleGeo, p1Mat);
 paddle1.position.set(-18, -1, 0);
