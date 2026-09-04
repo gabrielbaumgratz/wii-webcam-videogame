@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wii Web - Mini Games</title>
-    <!-- Modern, clean typography -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>Wii Web - 3D Games</title>
+    <!-- Modern typography -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
     <!-- MediaPipe dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
@@ -18,21 +19,20 @@
 </head>
 <body>
     
-    <!-- Ambient Digital Space Background -->
-    <div class="ambient-bg">
-        <div class="ambient-blob blob-1"></div>
-        <div class="ambient-blob blob-2"></div>
-        <div class="ambient-blob blob-3"></div>
-    </div>
+    <!-- Global WebGL Container (Handles all 3D graphics and backgrounds) -->
+    <div id="webgl-container"></div>
 
-    <!-- Liquid Glass Camera HUD -->
-    <div id="hud-container" class="glass">
+    <!-- Liquid Glass Camera HUD (Optimized) -->
+    <div id="hud-container" class="glass-ui">
         <video id="input_video" style="display: none;" autoplay playsinline></video>
         <canvas id="output_canvas" width="240" height="180"></canvas>
-        <div id="loading-hud">SENSING<br>ENVIRONMENT...</div>
+        <div id="loading-hud">SENSING...</div>
     </div>
 
-    <!-- MAIN APP CONTAINER -->
+    <!-- VIRTUAL CURSOR LAYER (For DOM clicks) -->
+    <canvas id="cursor-canvas"></canvas>
+
+    <!-- MAIN APP CONTAINER (UI Overlays) -->
     <div id="main-container">
         
         <!-- START SCREEN -->
@@ -41,8 +41,8 @@
             <p class="subtitle">A spatial gaming experience.</p>
             
             <div class="menu-layout">
-                <button class="wii-btn btn-primary glass" onclick="navTo('select-screen')">Enter Hub</button>
-                <button class="wii-btn btn-secondary glass" onclick="navTo('settings-screen')">System Settings</button>
+                <button class="wii-btn btn-primary glass-ui" onclick="navTo('select-screen')">Enter Hub</button>
+                <button class="wii-btn btn-secondary glass-ui" onclick="navTo('settings-screen')">System Settings</button>
             </div>
         </div>
 
@@ -50,21 +50,21 @@
         <div id="settings-screen" class="screen">
             <h1 class="screen-title">System Settings</h1>
             
-            <div class="settings-group glass">
+            <div class="settings-group glass-ui">
                 <h2>Target Score (Difficulty)</h2>
                 <div class="menu-layout row">
-                    <button class="wii-btn glass" onclick="setDifficulty(1, 5)">Light (5)</button>
-                    <button class="wii-btn glass" onclick="setDifficulty(1.5, 10)">Standard (10)</button>
-                    <button class="wii-btn glass" onclick="setDifficulty(2, 15)">Intense (15)</button>
+                    <button class="wii-btn glass-ui" onclick="setDifficulty(1, 5)">Light (5)</button>
+                    <button class="wii-btn glass-ui" onclick="setDifficulty(1.5, 10)">Standard (10)</button>
+                    <button class="wii-btn glass-ui" onclick="setDifficulty(2, 15)">Intense (15)</button>
                 </div>
             </div>
             
-            <div class="settings-group glass">
+            <div class="settings-group glass-ui">
                 <h2>Motion Tracking Sensitivity</h2>
                 <div class="menu-layout row">
-                    <button class="wii-btn glass" onclick="setSensitivity(0.8)">Low</button>
-                    <button class="wii-btn glass" onclick="setSensitivity(1.2)">Balanced</button>
-                    <button class="wii-btn glass" onclick="setSensitivity(1.8)">High</button>
+                    <button class="wii-btn glass-ui" onclick="setSensitivity(0.8)">Low</button>
+                    <button class="wii-btn glass-ui" onclick="setSensitivity(1.2)">Balanced</button>
+                    <button class="wii-btn glass-ui" onclick="setSensitivity(1.8)">High</button>
                 </div>
             </div>
 
@@ -72,7 +72,7 @@
                 Current: Light (5 pts) | Sensitivity: Balanced
             </p>
             
-            <button class="wii-btn btn-back glass" onclick="navTo('start-screen')">Return</button>
+            <button class="wii-btn btn-back glass-ui" onclick="navTo('start-screen')">Return</button>
         </div>
 
         <!-- GAME LIBRARY SCREEN -->
@@ -80,63 +80,52 @@
             <h1 class="screen-title">Library</h1>
             
             <div class="game-carousel">
-                <div class="game-card wii-btn glass" onclick="navTo('pong-mode-screen')">
-                    <div class="card-visual" style="background: linear-gradient(135deg, var(--atmos-blue), var(--deep-navy));"></div>
-                    <h2>Air Hockey</h2>
-                    <p>Vertical spatial defense.</p>
+                <div class="game-card wii-btn glass-ui" onclick="navTo('pong-mode-screen')">
+                    <h2>Air Hockey 3D</h2>
+                    <p>Neon tables & real physics.</p>
                 </div>
                 
-                <div class="game-card wii-btn glass" onclick="startGame('tennis', 1)">
-                    <div class="card-visual" style="background: linear-gradient(135deg, #1e5f30, var(--deep-navy));"></div>
+                <div class="game-card wii-btn glass-ui" onclick="startGame('tennis', 1)">
                     <h2>Court Tennis</h2>
-                    <p>3D depth perception.</p>
+                    <p>Coming soon to 3D.</p>
                 </div>
                 
-                <div class="game-card wii-btn glass" onclick="startGame('moto', 1)">
-                    <div class="card-visual" style="background: linear-gradient(135deg, #e94560, var(--deep-navy));"></div>
+                <div class="game-card wii-btn glass-ui" onclick="startGame('moto', 1)">
                     <h2>Moto Racer</h2>
-                    <p>Lateral evasion protocol.</p>
+                    <p>Coming soon to 3D.</p>
                 </div>
             </div>
             
-            <button class="wii-btn btn-back glass" style="margin-top: 40px;" onclick="navTo('start-screen')">Return</button>
+            <button class="wii-btn btn-back glass-ui" style="margin-top: 40px;" onclick="navTo('start-screen')">Return</button>
         </div>
 
         <!-- PONG MODE SELECT -->
         <div id="pong-mode-screen" class="screen">
             <h1 class="screen-title">Configure Instance</h1>
             <div class="menu-layout row">
-                <button class="wii-btn btn-primary glass" onclick="startGame('pong', 1)">Solo Protocol</button>
-                <button class="wii-btn btn-primary glass" onclick="startGame('pong', 2)">Local Split-Screen</button>
+                <button class="wii-btn btn-primary glass-ui" onclick="startGame('pong', 1)">Solo Protocol</button>
+                <button class="wii-btn btn-primary glass-ui" onclick="startGame('pong', 2)">Local Split-Screen</button>
             </div>
-            <button class="wii-btn btn-back glass" style="margin-top: 40px;" onclick="navTo('select-screen')">Return</button>
+            <br>
+            <button class="wii-btn btn-back glass-ui" onclick="navTo('select-screen')">Return</button>
         </div>
 
-        <!-- GAME SCREENS -->
-        <div id="pong-screen" class="screen">
-            <button class="wii-btn back-btn glass" onclick="backToMenu()">Disconnect</button>
-            <canvas id="pongCanvas" class="glass-canvas" width="800" height="400"></canvas>
-        </div>
-
-        <div id="tennis-screen" class="screen">
-            <button class="wii-btn back-btn glass" onclick="backToMenu()">Disconnect</button>
-            <canvas id="tennisCanvas" class="glass-canvas" width="800" height="400"></canvas>
-        </div>
-
-        <div id="moto-screen" class="screen">
-            <button class="wii-btn back-btn glass" onclick="backToMenu()">Disconnect</button>
-            <canvas id="motoCanvas" class="glass-canvas" width="800" height="400"></canvas>
+        <!-- IN-GAME HUD -->
+        <div id="game-ui-screen" class="screen">
+            <!-- Used to display scores over the 3D scene -->
+            <button class="wii-btn back-btn glass-ui" onclick="backToMenu()">Disconnect</button>
+            <div id="score-board" style="display: none; width: 100%; justify-content: space-between; position: absolute; top: 50px; padding: 0 100px; box-sizing: border-box; font-size: 5em; font-weight: bold; pointer-events: none;">
+                <span id="p1-score-txt" style="color: #486496;">0</span>
+                <span id="p2-score-txt" style="color: #AFED91;">0</span>
+            </div>
+            <div id="winner-text" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3em; font-weight: bold; color: white;"></div>
         </div>
 
     </div>
 
-    <!-- VIRTUAL CURSOR LAYER -->
-    <canvas id="cursor-canvas"></canvas>
-
+    <!-- Scripts -->
     <script src="motion.js"></script>
+    <script src="engine3d.js"></script>
     <script src="app.js"></script>
-    <script src="pong.js"></script>
-    <script src="tennis.js"></script>
-    <script src="moto.js"></script>
 </body>
 </html>

@@ -2,15 +2,11 @@
     --deep-navy: #051A42;
     --atmos-blue: #486496;
     --accent-green: #AFED91;
-    --glass-bg: rgba(72, 100, 150, 0.15);
-    --glass-border: rgba(255, 255, 255, 0.12);
-    --glass-highlight: rgba(255, 255, 255, 0.25);
     --text-primary: #FFFFFF;
-    --text-secondary: rgba(255, 255, 255, 0.7);
 }
 
 body {
-    background-color: var(--deep-navy);
+    background-color: var(--deep-navy); /* Fallback */
     color: var(--text-primary);
     font-family: 'Outfit', sans-serif;
     margin: 0;
@@ -19,60 +15,19 @@ body {
     user-select: none;
 }
 
-/* Ambient Digital Space Background */
-.ambient-bg {
+/* WebGL Background */
+#webgl-container {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
     z-index: -1;
-    background: radial-gradient(circle at center, #0a2357 0%, var(--deep-navy) 100%);
-    overflow: hidden;
 }
 
-.ambient-blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(100px);
-    opacity: 0.6;
-    animation: drift 25s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.blob-1 {
-    width: 60vw; height: 60vh;
-    background: var(--atmos-blue);
-    top: -10%; left: -10%;
-}
-
-.blob-2 {
-    width: 50vw; height: 50vh;
-    background: #083b7c;
-    bottom: -10%; right: 5%;
-    animation-delay: -5s;
-    animation-duration: 30s;
-}
-
-.blob-3 {
-    width: 40vw; height: 40vh;
-    background: rgba(175, 237, 145, 0.15);
-    top: 40%; left: 30%;
-    animation-delay: -10s;
-}
-
-@keyframes drift {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(15vw, 10vh) scale(1.1); }
-}
-
-/* Liquid Glass System */
-.glass {
-    background: var(--glass-bg);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid var(--glass-border);
-    border-radius: 24px;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2), inset 0 1px 0 var(--glass-highlight);
+/* Highly Optimized UI Glass (NO Heavy Shadows/Blurs) */
+.glass-ui {
+    background: rgba(5, 26, 66, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
 }
 
 /* Cursor Canvas */
@@ -87,20 +42,15 @@ body {
 /* HUD */
 #hud-container {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 220px;
-    height: 165px;
+    bottom: 30px; right: 30px;
+    width: 220px; height: 165px;
     z-index: 1000;
     overflow: hidden;
-    border-radius: 20px;
-    transition: transform 0.3s ease;
 }
 
 #output_canvas {
     width: 100%; height: 100%;
     transform: scaleX(-1);
-    opacity: 0.85; /* Blend with glass */
 }
 
 #loading-hud {
@@ -110,10 +60,9 @@ body {
     color: var(--accent-green);
     font-size: 0.8em;
     letter-spacing: 2px;
-    text-align: center;
 }
 
-/* Screens & Layout */
+/* Screens */
 .screen {
     display: none;
     flex-direction: column;
@@ -127,23 +76,13 @@ body {
 
 .screen.active {
     display: flex;
-    animation: fadeIn 0.5s ease-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
 }
 
 /* Typography */
 .brand-title {
     font-size: 5em;
     font-weight: 800;
-    letter-spacing: -2px;
     margin: 0;
-    background: linear-gradient(180deg, #FFF 0%, rgba(255,255,255,0.7) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 .screen-title {
@@ -156,134 +95,42 @@ body {
     font-size: 1.2em;
     color: var(--accent-green);
     letter-spacing: 4px;
-    text-transform: uppercase;
     margin-bottom: 60px;
-    font-weight: 500;
 }
 
 .status-text {
     color: var(--accent-green);
-    font-weight: 300;
-    letter-spacing: 1px;
 }
 
 /* Buttons */
-.menu-layout {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: center;
-}
-.menu-layout.row {
-    flex-direction: row;
-}
+.menu-layout { display: flex; flex-direction: column; gap: 20px; align-items: center; }
+.menu-layout.row { flex-direction: row; }
 
 .wii-btn {
-    color: var(--text-primary);
+    color: white;
     padding: 16px 32px;
     font-size: 1.1em;
-    font-weight: 500;
-    letter-spacing: 1px;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-    position: relative;
-    overflow: hidden;
+    transition: transform 0.1s;
     outline: none;
 }
 
-.wii-btn.btn-primary {
-    font-size: 1.4em;
-    padding: 20px 48px;
-    background: rgba(72, 100, 150, 0.3);
-}
-
-.wii-btn.btn-secondary {
-    font-size: 1em;
-    padding: 12px 28px;
-    opacity: 0.8;
-}
+.wii-btn.btn-primary { font-size: 1.4em; padding: 20px 48px; }
 
 /* HOVER / DWELL STATE */
 .wii-btn.hovering {
-    transform: scale(1.05) translateY(-5px);
-    background: rgba(175, 237, 145, 0.2); /* Soft accent green tint */
+    transform: scale(1.05);
+    background: rgba(175, 237, 145, 0.2);
     border-color: var(--accent-green);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(175, 237, 145, 0.2);
     color: var(--accent-green);
 }
 
 /* Settings Group */
-.settings-group {
-    padding: 30px;
-    margin-bottom: 20px;
-    width: 600px;
-    text-align: center;
-}
-.settings-group h2 {
-    font-size: 1.2em;
-    font-weight: 400;
-    margin-top: 0;
-    color: var(--text-secondary);
-}
+.settings-group { padding: 30px; margin-bottom: 20px; width: 600px; text-align: center; }
+.settings-group h2 { font-size: 1.2em; margin-top: 0; }
 
 /* Game Carousel */
-.game-carousel {
-    display: flex;
-    gap: 30px;
-    perspective: 1000px;
-}
+.game-carousel { display: flex; gap: 30px; }
+.game-card { width: 260px; height: 180px; padding: 20px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
 
-.game-card {
-    width: 260px;
-    height: 340px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-sizing: border-box;
-}
-
-.card-visual {
-    width: 100%;
-    height: 140px;
-    border-radius: 16px;
-    margin-bottom: 20px;
-    opacity: 0.8;
-    transition: opacity 0.3s;
-}
-
-.game-card h2 {
-    font-size: 1.5em;
-    margin: 0 0 10px 0;
-    font-weight: 600;
-}
-
-.game-card p {
-    font-size: 0.9em;
-    color: var(--text-secondary);
-    margin: 0;
-    text-align: center;
-    line-height: 1.4;
-}
-
-.game-card.hovering .card-visual {
-    opacity: 1;
-}
-
-/* In-Game Elements */
-.glass-canvas {
-    background: rgba(5, 26, 66, 0.5); /* Semi-transparent navy */
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
-    border-radius: 20px;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.4);
-}
-
-.back-btn {
-    position: absolute;
-    top: 30px;
-    left: 40px;
-    padding: 12px 24px;
-    font-size: 1em;
-    z-index: 10;
-}
+.back-btn { position: absolute; top: 30px; left: 40px; z-index: 10; }

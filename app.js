@@ -26,22 +26,31 @@ function setSensitivity(sens) {
     updateConfigText();
 }
 
+// INICIAR JOGOS
 function startGame(gameName, players) {
     window.playersMode = players || 1;
-    navTo(gameName + '-screen');
+    
+    // Todos usam o mesmo wrapper UI agora
+    navTo('game-ui-screen');
     window.activeGame = gameName;
-    if (gameName === 'pong') startPong();
-    if (gameName === 'tennis') startTennis();
-    if (gameName === 'moto') startMoto();
+    
+    if (gameName === 'pong') {
+        if(typeof initPong3D === 'function') initPong3D();
+    } else {
+        // Tênis e Moto voltarão em 3D futuramente
+        document.getElementById('winner-text').style.display = 'block';
+        document.getElementById('winner-text').innerText = "Game mode migrating to 3D. Please check back later!";
+    }
 }
 
 function backToMenu() {
     window.activeGame = null;
+    if(typeof stopPong3D === 'function') stopPong3D();
     navTo('select-screen');
 }
 
 // ==========================================
-// FUTURISTIC VIRTUAL CURSOR (Liquid Energy)
+// FUTURISTIC VIRTUAL CURSOR
 // ==========================================
 const cursorCanvas = document.getElementById('cursor-canvas');
 const cursorCtx = cursorCanvas.getContext('2d');
@@ -67,11 +76,9 @@ function updateCursor() {
         let elements = document.elementsFromPoint(cx, cy);
         let foundBtn = elements.find(el => el.classList && el.classList.contains('wii-btn'));
 
-        // Motion trail / soft glow variables
         let coreRadius = 6;
         let ringRadius = 24;
-        let accentColor = '#AFED91'; // Accent Green
-        let atmosColor = '#486496';  // Atmospheric Blue
+        let accentColor = '#AFED91'; 
 
         if (foundBtn) {
             if (hoverTarget !== foundBtn) {
@@ -83,11 +90,9 @@ function updateCursor() {
                 let elapsed = performance.now() - hoverStartTime;
                 let progress = Math.min(elapsed / DWELL_TIME, 1);
                 
-                // Active / Gesture state (Compression and Glow)
-                ringRadius = 24 - (progress * 4); // Rings compress slightly
+                ringRadius = 24 - (progress * 4);
                 coreRadius = 6 + (progress * 2);
 
-                // Dwell Progress Ring (Accent Green)
                 cursorCtx.beginPath();
                 cursorCtx.arc(cx, cy, 32, -Math.PI/2, (-Math.PI/2) + (Math.PI * 2 * progress));
                 cursorCtx.strokeStyle = accentColor;
@@ -96,13 +101,10 @@ function updateCursor() {
                 cursorCtx.stroke();
 
                 if (progress >= 1) {
-                    // Interaction trigger
                     hoverTarget.click();
                     hoverTarget.classList.remove('hovering');
                     hoverTarget = null; 
                     hoverStartTime = performance.now() + 1500;
-                    
-                    // Ripple effect could be added here
                 }
             }
         } else {
@@ -112,23 +114,14 @@ function updateCursor() {
             }
         }
 
-        // Draw the digital entity cursor
-        
-        // 1. Soft outer blur (Glass glow)
-        cursorCtx.shadowBlur = 15;
-        cursorCtx.shadowColor = hoverTarget ? accentColor : atmosColor;
-        
-        // 2. Translucent outer ring
         cursorCtx.beginPath();
         cursorCtx.arc(cx, cy, ringRadius, 0, Math.PI*2);
-        cursorCtx.fillStyle = hoverTarget ? 'rgba(175, 237, 145, 0.15)' : 'rgba(72, 100, 150, 0.2)';
+        cursorCtx.fillStyle = hoverTarget ? 'rgba(175, 237, 145, 0.3)' : 'rgba(72, 100, 150, 0.4)';
         cursorCtx.fill();
-        cursorCtx.strokeStyle = hoverTarget ? 'rgba(175, 237, 145, 0.6)' : 'rgba(255, 255, 255, 0.3)';
-        cursorCtx.lineWidth = 1.5;
+        cursorCtx.strokeStyle = hoverTarget ? 'rgba(175, 237, 145, 0.8)' : 'rgba(255, 255, 255, 0.5)';
+        cursorCtx.lineWidth = 2;
         cursorCtx.stroke();
 
-        // 3. Solid glowing core
-        cursorCtx.shadowBlur = 0; // Reset shadow for core
         cursorCtx.beginPath();
         cursorCtx.arc(cx, cy, coreRadius, 0, Math.PI*2);
         cursorCtx.fillStyle = hoverTarget ? accentColor : '#FFFFFF';
