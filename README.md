@@ -1,57 +1,54 @@
-# Wii Web - Mini Games
+# Wii Web Videogame
 
-Bem-vindo ao **Wii Web Hub**, um experimento de jogos de navegador que traz a experiência mágica do Nintendo Wii e do Xbox Kinect direto para o seu computador, usando apenas a sua webcam! 
+Uma coletânea de mini-jogos para navegador controlada inteiramente pelo movimento do seu corpo, utilizando a sua webcam.
 
-Nenhum controle extra é necessário. **O seu dedo é o mouse e a sua mão é a raquete!**
+Nenhum hardware extra é necessário. O seu dedo atua como o mouse para a navegação e a sua mão atua como o controle durante as partidas.
 
 ---
 
-## Como Funciona a Magia?
+## Tecnologias Utilizadas
 
-O projeto utiliza a biblioteca **MediaPipe** (do Google) para realizar Inteligência Artificial de visão computacional diretamente no seu navegador.
+O projeto foi desenvolvido para rodar de forma leve e responsiva direto no navegador (client-side).
 
-1. **Captura:** O jogo acessa a sua webcam de forma segura.
-2. **Rastreamento:** O modelo de "Hand Tracking" detecta os pontos articulares da sua mão a 60 quadros por segundo.
-3. **Cursor Mágico:** O ponto do seu dedo indicador controla um cursor flutuante. Fixe o dedo sobre um botão por 1.5s para clicar nele ("Dwell Click").
-4. **Jogos:** 
-   - **Tênis 3D:** Mova a mão para encontrar a bolinha no ar em profundidade, usando as regras reais do esporte (15, 30, 40).
-   - **Moto Racer:** Desloque a mão para os lados para desviar dos obstáculos em uma estrada.
-   - **Hóquei:** Defenda seu lado movendo a mão para cima e para baixo.
+- **Frontend:** HTML5, CSS3 e JavaScript puro (Vanilla JS). Renderização gráfica feita via Canvas API.
+- **Inteligência Artificial:** O rastreamento de movimento utiliza a biblioteca de visão computacional **MediaPipe** (do Google). 
+- **Performance:** A inteligência artificial é executada sobre **WebAssembly (WASM)**. Isso permite que o navegador processe o feed da câmera usando código otimizado de baixo nível em tempo real (cerca de 60 quadros por segundo), sem a necessidade de enviar dados para servidores externos.
+
+## Como Funciona
+
+- **Captura e Rastreamento:** O jogo acessa a sua webcam e detecta a geometria da sua mão instantaneamente.
+- **Navegação (Dwell Click):** A ponta do seu dedo indicador controla o cursor do menu. Ao manter o dedo parado sobre um botão por 1.5s, o clique é acionado automaticamente, eliminando o uso do mouse convencional.
+- **Jogos Disponíveis:**
+  - **Tênis 3D:** Mova a mão no eixo vertical e horizontal para alinhar a raquete em profundidade. O jogo utiliza o sistema de pontuação oficial do esporte real (15, 30, 40, Iguais e Vantagem).
+  - **Moto Racer:** Desloque a mão lateralmente para guiar a motocicleta e desviar dos obstáculos na pista.
+  - **Hóquei:** Defenda seu lado do campo movendo a mão na vertical para rebater o disco.
 
 ## Como Rodar na sua Máquina
 
-Como os navegadores bloqueiam o acesso à webcam em arquivos locais (`file:///`), você precisa rodar o jogo através de um servidor local simples. 
+Os navegadores modernos bloqueiam o acesso à câmera ao abrir arquivos HTML diretamente do disco. Portanto, é necessário iniciar um servidor local.
 
 1. Clone o repositório:
    ```bash
    git clone https://github.com/gabrielbaumgratz/wii-webcam-videogame.git
    cd wii-webcam-videogame
    ```
-2. Inicie o servidor local (Usando Node.js):
+2. Inicie o servidor local (Exemplo utilizando Node.js):
    ```bash
    npx http-server -p 8000
    ```
-3. Abra o navegador e acesse: `http://localhost:8000`
-4. Permita o uso da câmera e divirta-se!
+3. Acesse `http://localhost:8000` em seu navegador.
+4. Conceda a permissão de uso da câmera.
 
 ---
 
-## Privacidade e Segurança (Não estamos te espionando!)
+## Privacidade e Segurança
 
-Entendemos que dar permissão de câmera para o navegador pode ser desconfortável. Por isso, queremos deixar nossa arquitetura totalmente transparente:
-
-- **100% Local (Client-Side):** Absolutamente nenhuma imagem, vídeo ou dado pessoal sai do seu computador.
-- **Sem Servidores de Nuvem:** Toda a Inteligência Artificial e a leitura dos movimentos rodam localmente dentro da memória do seu próprio navegador (via WebAssembly). 
-- Ninguém está te observando. O uso da câmera é temporário e estritamente restrito à aba do jogo para calcular a posição geométrica da sua mão. Se não se sentir confortável, o projeto no futuro suportará o uso do seu Smartphone como controle!
+Toda a arquitetura do projeto é baseada em processamento local. Nenhuma imagem, vídeo ou dado pessoal é transmitido pela internet, salvo na nuvem ou acessado por terceiros. A leitura da câmera ocorre estritamente na memória do seu navegador apenas para extrair as coordenadas geométricas da mão.
 
 ---
 
-## O Futuro do Projeto (Próximos Passos)
+## Próximos Passos (Roadmap)
 
-Este projeto está em constante evolução. Nossas próximas grandes atualizações incluem:
-- **O Smartphone como Controle:** Integração via Python e WebSockets para usar o acelerômetro do seu celular como um verdadeiro "Wii Remote".
-- **Multiplayer Local (Tela Dividida):** Suporte para dois jogadores jogarem no mesmo computador, dividindo a tela.
-- **Golfe:** Novo jogo para praticar o swing de golfe.
-
----
-Feito com JavaScript puro e IA de ponta. Divirta-se!
+- **Integração Mobile:** Utilização do giroscópio e acelerômetro do smartphone como controle alternativo à câmera, utilizando um servidor Python com WebSockets.
+- **Multiplayer Local (Split-Screen):** Suporte para dois jogadores competirem no mesmo ambiente, dividindo a tela do computador.
+- **Novo Jogo (Golfe):** Desenvolvimento de uma mecânica de *swing* baseada na aceleração do braço.
