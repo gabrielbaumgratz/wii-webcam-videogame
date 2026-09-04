@@ -1,4 +1,51 @@
 // ==========================================
+// INTEGRAÇÃO SMARTPHONE (WEBSOCKET)
+// ==========================================
+let ws = null;
+window.phoneConnected = false;
+
+function connectSmartphone() {
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    ws = new WebSocket(wsProtocol + '//' + window.location.host);
+    
+    ws.onopen = () => {
+        console.log("Conectado ao Servidor WebSocket!");
+        ws.send(JSON.stringify({ type: 'host_connect' }));
+    };
+    
+    ws.onmessage = (event) => {
+        try {
+            const data = JSON.parse(event.data);
+            if (data.type === 'controller_data') {
+                window.phoneConnected = true;
+                
+                if (data.inputType === 'gyro') {
+                    // Mapeamento do Giroscópio para (window.hand1X, window.hand1Y)
+                    // Gamma (Inclinação Direita/Esquerda): -90 a 90
+                    // Beta (Inclinação Frente/Trás): -180 a 180
+                    
+                    let mappedX = (data.gamma + 45) / 90; // Centro = 0.5
+                    let mappedY = (data.beta + 45) / 90;  
+                    
+                    window.hand1X = Math.max(0, Math.min(1, mappedX));
+                    window.hand1Y = Math.max(0, Math.min(1, mappedY));
+                } else if (data.inputType === 'button') {
+                    // Processar botões A e B como clique de Pinça
+                    if (data.key === 'a' || data.key === 'b') {
+                        window.isPinching1 = data.pressed;
+                    }
+                }
+            }
+        } catch (e) { console.error(e); }
+    };
+}
+
+// Iniciar conexão WebSocket se estiver no servidor
+if (window.location.hostname !== "") {
+    connectSmartphone();
+}
+
+// ==========================================
 // LOCALIZATION (i18n)
 // ==========================================
 const translations = {

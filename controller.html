@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Wii Web Controller</title>
+    <style>
+        body {
+            margin: 0; padding: 0;
+            background: #051A42;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex; flex-direction: column;
+            justify-content: space-between;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .header {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0,0,0,0.5);
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        #gyro-toggle {
+            background: #00ffcc; color: black;
+            border: none; border-radius: 10px;
+            padding: 15px 30px; font-size: 1.2em; font-weight: bold;
+            margin: 20px auto; display: block; width: 80%;
+        }
+        .controls-area {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 40px;
+            flex-grow: 1;
+            align-items: center;
+        }
+        .dpad {
+            display: grid;
+            grid-template-columns: 60px 60px 60px;
+            grid-template-rows: 60px 60px 60px;
+            gap: 5px;
+        }
+        .dpad-btn {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px; border: 2px solid white;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 1.5em; font-weight: bold;
+        }
+        .dpad-btn:active { background: white; color: black; }
+        
+        #btn-up { grid-column: 2; grid-row: 1; }
+        #btn-left { grid-column: 1; grid-row: 2; }
+        #btn-right { grid-column: 3; grid-row: 2; }
+        #btn-down { grid-column: 2; grid-row: 3; }
+        
+        .action-btns {
+            display: flex; gap: 20px;
+        }
+        .action-btn {
+            width: 80px; height: 80px;
+            border-radius: 50%; border: 3px solid white;
+            background: rgba(255,0,0,0.5);
+            display: flex; justify-content: center; align-items: center;
+            font-size: 2em; font-weight: bold;
+        }
+        #btn-a { background: #FF3333; margin-top: 40px; }
+        #btn-b { background: #3366FF; margin-bottom: 40px; }
+        .action-btn:active { background: white; color: black; }
+    </style>
+</head>
+<body>
+    <div class="header" id="status">Desconectado 🔴</div>
+    
+    <button id="gyro-toggle">ATIVAR GIROSCÓPIO</button>
+    
+    <div class="controls-area">
+        <!-- D-PAD -->
+        <div class="dpad">
+            <div class="dpad-btn" id="btn-up">W</div>
+            <div class="dpad-btn" id="btn-left">A</div>
+            <div class="dpad-btn" id="btn-right">D</div>
+            <div class="dpad-btn" id="btn-down">S</div>
+        </div>
+        
+        <!-- ACTION BUTTONS -->
+        <div class="action-btns">
+            <div class="action-btn" id="btn-b">B</div>
+            <div class="action-btn" id="btn-a">A</div>
+        </div>
+    </div>
+
+    <script>
+        const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const ws = new WebSocket(wsProtocol + '//' + window.location.host);
+        let gyroActive = false;
+        
+        ws.onopen = () => { document.getElementById('status').innerText = 'Conectado 🟢'; };
+        ws.onclose = () => { document.getElementById('status').innerText = 'Desconectado 🔴'; };
+
+        function sendBtn(key, pressed) {
+            if(ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'controller_data', inputType: 'button', key: key, pressed: pressed }));
+            }
+        }
+
+        // Setup Button Listeners
+        ['up','down','left','right','a','b'].forEach(k => {
+            const el = document.getElementById('btn-' + k);
+            el.addEventListener('touchstart', (e) => { e.preventDefault(); sendBtn(k, true); });
+            el.addEventListener('touchend', (e) => { e.preventDefault(); sendBtn(k, false); });
+            el.addEventListener('mousedown', (e) => { e.preventDefault(); sendBtn(k, true); });
+            el.addEventListener('mouseup', (e) => { e.preventDefault(); sendBtn(k, false); });
+        });
+
+        // Gyroscope
+        document.getElementById('gyro-toggle').addEventListener('click', () => {
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission()
+                    .then(permissionState => {
+                        if (permissionState === 'granted') {
+                            gyroActive = !gyroActive;
+                            document.getElementById('gyro-toggle').innerText = gyroActive ? "GIROSCÓPIO: ON" : "GIROSCÓPIO: OFF";
+                        }
+                    })
+                    .catch(console.error);
+            } else {
+                gyroActive = !gyroActive;
+                document.getElementById('gyro-toggle').innerText = gyroActive ? "GIROSCÓPIO: ON" : "GIROSCÓPIO: OFF";
+            }
+        });
+
+        window.addEventListener('deviceorientation', (event) => {
+            if (!gyroActive || ws.readyState !== WebSocket.OPEN) return;
+            // Mandar Gamma (inclinação lateral) e Beta (inclinação frontal)
+            ws.send(JSON.stringify({
+                type: 'controller_data',
+                inputType: 'gyro',
+                gamma: event.gamma,
+                beta: event.beta
+            }));
+        });
+    </script>
+</body>
+</html>

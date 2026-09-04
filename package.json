@@ -1,0 +1,14 @@
+{
+  "name": "wii-webcam-videogame",
+  "version": "1.0.0",
+  "description": "Wii Web Minigames with Smartphone Controller",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "tunnel": "npx localtunnel --port 8000"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "ws": "^8.13.0"
+  }
+}
