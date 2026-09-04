@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wii Web - Ping Pong</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Dependências do MediaPipe (Inteligência Artificial para rastrear a mão) -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Wii Pong</h1>
+        <p>Mova sua mão na frente da câmera (para cima e para baixo) para controlar a raquete direita (Azul)!</p>
+        <div id="loading">Carregando IA de câmera... Por favor, aguarde e permita o acesso à câmera.</div>
+        
+        <div class="game-area">
+            <canvas id="gameCanvas" width="800" height="400"></canvas>
+            <video id="input_video" width="800" height="400" autoplay playsinline style="display: none;"></video>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+    <script src="motion.js"></script>
+</body>
+</html>
