@@ -1,8 +1,16 @@
 window.difficultyMultiplier = 1;
 window.maxScore = 5;
+window.sensitivity = 1.2;
 window.activeGame = null;
+window.playersMode = 1; // 1 ou 2
 
-// Lógica de Navegação
+// Funções para atualizar os textos de configuração
+function updateConfigText() {
+    let diffName = window.maxScore === 5 ? "Fácil" : (window.maxScore === 10 ? "Médio" : "Difícil");
+    let sensName = window.sensitivity === 0.8 ? "Baixa" : (window.sensitivity === 1.2 ? "Normal" : "Alta");
+    document.getElementById('current-diff-text').innerText = `Atual: ${diffName} (${window.maxScore} pts) | Sensibilidade: ${sensName}`;
+}
+
 function navTo(screenId) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(screenId).classList.add('active');
@@ -11,12 +19,16 @@ function navTo(screenId) {
 function setDifficulty(mult, score) {
     window.difficultyMultiplier = mult;
     window.maxScore = score;
-    let diffName = score === 5 ? "Fácil" : (score === 10 ? "Médio" : "Difícil");
-    document.getElementById('current-diff-text').innerText = `Dificuldade Atual: ${diffName} (${score} pts)`;
-    navTo('start-screen');
+    updateConfigText();
 }
 
-function startGame(gameName) {
+function setSensitivity(sens) {
+    window.sensitivity = sens;
+    updateConfigText();
+}
+
+function startGame(gameName, players) {
+    window.playersMode = players || 1;
     navTo(gameName + '-screen');
     window.activeGame = gameName;
     if (gameName === 'pong') startPong();
@@ -30,7 +42,7 @@ function backToMenu() {
 }
 
 // ==========================================
-// MOUSE VIRTUAL (DWELL CLICK / HOVER TO CLICK)
+// MOUSE VIRTUAL (DWELL CLICK)
 // ==========================================
 const cursorCanvas = document.getElementById('cursor-canvas');
 const cursorCtx = cursorCanvas.getContext('2d');
@@ -44,33 +56,29 @@ window.addEventListener('resize', () => {
 
 let hoverTarget = null;
 let hoverStartTime = 0;
-const DWELL_TIME = 1500; // Tempo parado no botão para clicar (1.5 segundos)
+const DWELL_TIME = 1500;
 
 function updateCursor() {
     cursorCtx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
     
+    // Para navegação, vamos usar sempre a mão 1 (a primeira que aparece ou a da direita)
     if (window.isHandPresent) {
-        // Mapear posição: X é invertido porque a câmera está espelhada
-        let cx = (1 - window.handX) * cursorCanvas.width;
-        let cy = window.handY * cursorCanvas.height;
+        let cx = (1 - window.hand1X) * cursorCanvas.width;
+        let cy = window.hand1Y * cursorCanvas.height;
 
-        // Procura botões usando classes 'wii-btn' onde o cursor virtual está
         let elements = document.elementsFromPoint(cx, cy);
         let foundBtn = elements.find(el => el.classList && el.classList.contains('wii-btn'));
 
         if (foundBtn) {
             if (hoverTarget !== foundBtn) {
-                // Entrou em um botão novo
                 if(hoverTarget) hoverTarget.classList.remove('hovering');
                 hoverTarget = foundBtn;
                 hoverStartTime = performance.now();
                 hoverTarget.classList.add('hovering');
             } else {
-                // Continua no mesmo botão, carregar círculo
                 let elapsed = performance.now() - hoverStartTime;
                 let progress = Math.min(elapsed / DWELL_TIME, 1);
                 
-                // Desenhar a Trava de Segurança (Anel em volta)
                 cursorCtx.beginPath();
                 cursorCtx.arc(cx, cy, 35, -Math.PI/2, (-Math.PI/2) + (Math.PI * 2 * progress));
                 cursorCtx.strokeStyle = '#00ff00';
@@ -78,22 +86,19 @@ function updateCursor() {
                 cursorCtx.stroke();
 
                 if (progress >= 1) {
-                    // Clique automático!
                     hoverTarget.click();
                     hoverTarget.classList.remove('hovering');
                     hoverTarget = null; 
-                    hoverStartTime = performance.now() + 1500; // Evita clique duplo acidental (Cooldown)
+                    hoverStartTime = performance.now() + 1500;
                 }
             }
         } else {
-            // Saiu de qualquer botão
             if (hoverTarget) {
                 hoverTarget.classList.remove('hovering');
                 hoverTarget = null;
             }
         }
 
-        // Desenhar a "Mãozinha/Cursor" azulzinha do Wii
         cursorCtx.beginPath();
         cursorCtx.arc(cx, cy, 15, 0, Math.PI*2);
         cursorCtx.fillStyle = 'rgba(0, 191, 255, 0.9)';

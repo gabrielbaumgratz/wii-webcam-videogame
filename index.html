@@ -36,15 +36,25 @@
         <!-- TELA 2: CONFIGURAÇÕES -->
         <div id="settings-screen" class="screen">
             <h1>Configurações</h1>
-            <div class="menu-buttons" style="flex-direction: row; gap: 20px;">
+            
+            <h2 style="color: white;">Pontuação Máxima e IA</h2>
+            <div class="menu-buttons" style="flex-direction: row; gap: 20px; margin-top: 10px;">
                 <button class="wii-btn" onclick="setDifficulty(1, 5)">Fácil (5 pts)</button>
                 <button class="wii-btn" onclick="setDifficulty(1.5, 10)">Médio (10 pts)</button>
                 <button class="wii-btn" onclick="setDifficulty(2, 15)">Difícil (15 pts)</button>
             </div>
-            <p id="current-diff-text" style="font-size: 1.5em; color: #00bfff; margin-top: 20px;">
-                Dificuldade Atual: Fácil (5 pts)
+            
+            <h2 style="color: white; margin-top: 30px;">Sensibilidade do Movimento</h2>
+            <div class="menu-buttons" style="flex-direction: row; gap: 20px; margin-top: 10px;">
+                <button class="wii-btn" onclick="setSensitivity(0.8)">Baixa</button>
+                <button class="wii-btn" onclick="setSensitivity(1.2)">Normal</button>
+                <button class="wii-btn" onclick="setSensitivity(1.8)">Alta</button>
+            </div>
+
+            <p id="current-diff-text" style="font-size: 1.2em; color: #00bfff; margin-top: 30px;">
+                Atual: Fácil (5 pts) | Sensibilidade: Normal
             </p>
-            <br><br>
+            <br>
             <button class="wii-btn btn-back" onclick="navTo('start-screen')">⬅ Voltar</button>
         </div>
 
@@ -52,21 +62,32 @@
         <div id="select-screen" class="screen">
             <h1>Escolha um Jogo</h1>
             <div class="game-cards">
-                <div class="card wii-btn" onclick="startGame('pong')">
+                <div class="card wii-btn" onclick="navTo('pong-mode-screen')">
                     <h2>🏓 Hóquei</h2>
-                    <p>Subir e descer a mão.</p>
+                    <p>1P ou 2P</p>
                 </div>
-                <div class="card wii-btn" onclick="startGame('tennis')">
+                <div class="card wii-btn" onclick="startGame('tennis', 1)">
                     <h2>🎾 Tênis 3D</h2>
-                    <p>Regras oficiais de quadra!</p>
+                    <p>Regras de quadra</p>
                 </div>
-                <div class="card wii-btn" onclick="startGame('moto')">
+                <div class="card wii-btn" onclick="startGame('moto', 1)">
                     <h2>🏍️ Moto</h2>
-                    <p>Mova para os lados.</p>
+                    <p>Mova para os lados</p>
                 </div>
             </div>
             <br><br>
             <button class="wii-btn btn-back" onclick="navTo('start-screen')">⬅ Voltar</button>
+        </div>
+
+        <!-- TELA 3.5: MODO DO PONG -->
+        <div id="pong-mode-screen" class="screen">
+            <h1>Modo de Jogo</h1>
+            <div class="menu-buttons" style="flex-direction: row; gap: 40px;">
+                <button class="wii-btn btn-large" onclick="startGame('pong', 1)">👤 1 Jogador</button>
+                <button class="wii-btn btn-large" onclick="startGame('pong', 2)">👥 2 Jogadores (Tela Dividida)</button>
+            </div>
+            <br><br>
+            <button class="wii-btn btn-back" onclick="navTo('select-screen')">⬅ Voltar</button>
         </div>
 
         <!-- TELAS DOS JOGOS -->

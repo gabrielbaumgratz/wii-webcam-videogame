@@ -28,7 +28,7 @@ function updateMoto() {
     if (mGameOver) return;
     
     // Controlar a moto guiando a mão pra esquerda e pra direita
-    let targetX = (1 - window.handX) * mCvs.width;
+    let targetX = (1 - window.hand1X) * mCvs.width;
     mPlayerX += (targetX - mPlayerX) * 0.2;
     if(mPlayerX < 150) mPlayerX = 150;
     if(mPlayerX > 650) mPlayerX = 650;

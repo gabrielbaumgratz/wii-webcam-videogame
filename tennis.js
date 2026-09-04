@@ -64,8 +64,8 @@ function getTennisScoreText(pts1, pts2) {
 function updateTennis() {
     if (showingWinScreenTennis) return;
 
-    let targetX = (1 - window.handX) * tenCvs.width;
-    let targetY = window.handY * tenCvs.height;
+    let targetX = (1 - window.hand1X) * tenCvs.width;
+    let targetY = window.hand1Y * tenCvs.height;
     tP2.x += (targetX - tP2.x) * 0.3;
     tP2.y += (targetY - tP2.y) * 0.3;
 

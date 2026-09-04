@@ -15,7 +15,6 @@ let bX = 400; let bY = 200;
 let bSpeedX = 7; let bSpeedY = 5;
 
 function resetPongBall() {
-    // Usa o maxScore configurado no menu!
     if (p1Score >= window.maxScore || p2Score >= window.maxScore) showingWinScreenPong = true;
     bSpeedX = -bSpeedX;
     bX = 400; bY = 200;
@@ -38,17 +37,32 @@ function startPong() {
 function updatePong() {
     if (showingWinScreenPong) return;
 
-    let p1Center = paddle1Y + pHeight/2;
-    let iaSpeed = 6 * window.difficultyMultiplier;
-    if (p1Center < bY - 35) paddle1Y += iaSpeed;
-    else if (p1Center > bY + 35) paddle1Y -= iaSpeed;
+    // CONTROLE DA RAQUETE ESQUERDA (PLAYER 1 ou PC)
+    if (window.playersMode === 2) {
+        // Modo 2 Jogadores: A raquete esquerda usa a mão direita da imagem (invertida, hand2Y)
+        // Isso porque quem fica à esquerda da câmera, aparece na direita do canvas espelhado.
+        let target1Y = window.hand2Y * pongCanvas.height;
+        paddle1Y += (target1Y - (paddle1Y + pHeight/2)) * 0.3;
+        
+        if (paddle1Y < 0) paddle1Y = 0;
+        if (paddle1Y > pongCanvas.height - pHeight) paddle1Y = pongCanvas.height - pHeight;
+    } else {
+        // Modo 1 Jogador: PC controla a esquerda
+        let p1Center = paddle1Y + pHeight/2;
+        let iaSpeed = 6 * window.difficultyMultiplier;
+        if (p1Center < bY - 35) paddle1Y += iaSpeed;
+        else if (p1Center > bY + 35) paddle1Y -= iaSpeed;
+    }
 
-    let targetY = window.handY * pongCanvas.height;
-    paddle2Y += (targetY - (paddle2Y + pHeight/2)) * 0.3;
+    // CONTROLE DA RAQUETE DIREITA (PLAYER 2 / PLAYER PRINCIPAL)
+    // Lê a mão da esquerda da imagem (hand1Y)
+    let target2Y = window.hand1Y * pongCanvas.height;
+    paddle2Y += (target2Y - (paddle2Y + pHeight/2)) * 0.3;
     
     if (paddle2Y < 0) paddle2Y = 0;
     if (paddle2Y > pongCanvas.height - pHeight) paddle2Y = pongCanvas.height - pHeight;
 
+    // Física
     bX += bSpeedX; bY += bSpeedY;
 
     if (bX < pThick) {
@@ -73,7 +87,13 @@ function drawPong() {
     if (showingWinScreenPong) {
         pongCtx.fillStyle = 'white';
         pongCtx.font = '30px Arial';
-        pongCtx.fillText(p1Score >= window.maxScore ? "PC Venceu" : "Você Venceu", 300, 200);
+        let winnerText = "";
+        if (window.playersMode === 2) {
+            winnerText = p1Score >= window.maxScore ? "Jogador 1 (Esquerda) Venceu!" : "Jogador 2 (Direita) Venceu!";
+        } else {
+            winnerText = p1Score >= window.maxScore ? "PC Venceu" : "Você Venceu";
+        }
+        pongCtx.fillText(winnerText, 200, 200);
         return;
     }
     
