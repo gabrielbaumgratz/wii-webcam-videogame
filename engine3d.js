@@ -300,6 +300,340 @@ function updatePong3D() {
 }
 
 // ==========================================
+// TENNIS 3D LOGIC
+// ==========================================
+let tennisActive = false;
+let tennisShowingWin = false;
+let tennisGroup = new THREE.Group();
+scene.add(tennisGroup);
+tennisGroup.visible = false;
+
+// Assets: Quadra e Bola
+const tPlaneGeom = new THREE.PlaneGeometry(30, 60);
+const tPlaneMat = new THREE.MeshStandardMaterial({ color: 0x11aa33, roughness: 0.8 }); // Quadra verde
+const tCourt = new THREE.Mesh(tPlaneGeom, tPlaneMat);
+tCourt.rotation.x = -Math.PI / 2;
+tCourt.position.y = -5;
+tennisGroup.add(tCourt);
+
+// Linhas da quadra
+const tLineMat = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 });
+const tLines = new THREE.Group();
+const rectGeom = new THREE.EdgesGeometry(new THREE.PlaneGeometry(28, 58));
+const rectLine = new THREE.LineSegments(rectGeom, tLineMat);
+rectLine.rotation.x = -Math.PI / 2;
+rectLine.position.y = -4.9;
+tLines.add(rectLine);
+const netGeom = new THREE.BoxGeometry(30, 2, 0.1);
+const netMat = new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: 0.5 });
+const net = new THREE.Mesh(netGeom, netMat);
+net.position.set(0, -4, 0);
+tLines.add(net);
+tennisGroup.add(tLines);
+
+// Textura da Raquete (Asset PNG)
+const textureLoader = new THREE.TextureLoader();
+const racketTex = textureLoader.load('assets/racket.jpg');
+const rMat = new THREE.MeshBasicMaterial({ map: racketTex, transparent: true, blending: THREE.AdditiveBlending, side: THREE.DoubleSide });
+const p1Racket = new THREE.Mesh(new THREE.PlaneGeometry(6, 6), rMat);
+p1Racket.position.set(0, 0, 20); // Jogador perto da câmera
+tennisGroup.add(p1Racket);
+
+const p2Racket = new THREE.Mesh(new THREE.PlaneGeometry(6, 6), rMat);
+p2Racket.position.set(0, 0, -20); // Inimigo no fundo
+tennisGroup.add(p2Racket);
+
+// Bola (Asset PNG)
+const ballTex = textureLoader.load('assets/ball.jpg');
+const ballMat = new THREE.MeshBasicMaterial({ map: ballTex, transparent: true, blending: THREE.AdditiveBlending });
+const tBall = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), ballMat);
+tennisGroup.add(tBall);
+
+let tBX = 0, tBZ = 0, tBY = -4, tSpeedX = 0, tSpeedZ = 0, tSpeedY = 0;
+let tP1Score = 0, tP2Score = 0;
+
+const tennisScores = ["0", "15", "30", "40", "ADV", "WIN"];
+
+function initTennis3D() {
+    tennisActive = true;
+    tennisShowingWin = false;
+    tennisGroup.visible = true;
+    particlesMesh.visible = false;
+    gridHelper.visible = false;
+    
+    // Visão isométrica nas costas do jogador
+    camera.position.set(0, 15, 35);
+    camera.lookAt(0, -5, 0);
+    
+    tP1Score = 0; tP2Score = 0;
+    updateTennisScoreHUD();
+    document.getElementById('score-board').style.display = 'flex';
+    document.getElementById('winner-text').style.display = 'none';
+    
+    resetTennisBall(1);
+}
+
+function updateTennisScoreHUD() {
+    document.getElementById('p1-score-txt').innerText = tennisScores[tP1Score] || "WIN";
+    document.getElementById('p2-score-txt').innerText = tennisScores[tP2Score] || "WIN";
+}
+
+function stopTennis3D() {
+    tennisActive = false;
+    tennisGroup.visible = false;
+    particlesMesh.visible = true;
+    gridHelper.visible = true;
+    
+    document.getElementById('score-board').style.display = 'none';
+    document.getElementById('winner-text').style.display = 'none';
+    
+    camera.position.set(0, 0, 30);
+    camera.lookAt(0, 0, 0);
+}
+
+function resetTennisBall(scorer) {
+    tBX = 0; tBZ = 0; tBY = -4;
+    tSpeedX = (Math.random() - 0.5) * 0.4;
+    tSpeedY = 0;
+    tSpeedZ = (scorer === 1 ? -0.4 : 0.4) * (window.difficultyMultiplier * 0.8 + 0.2);
+}
+
+function updateTennis3D() {
+    if(!tennisActive || tennisShowingWin || isGoalPause || window.isPaused) return;
+
+    // Jogador 1 (Controlado pela mão)
+    let targetX = (window.hand1X - 0.5) * 30;
+    let targetY = (1 - window.hand1Y) * 15 - 5; 
+    p1Racket.position.x += (targetX - p1Racket.position.x) * 0.3;
+    p1Racket.position.y += (targetY - p1Racket.position.y) * 0.3;
+
+    // Inimigo (IA)
+    let speedIA = 0.2 * window.difficultyMultiplier;
+    let predictionX = tBX;
+    if (tSpeedZ < 0) { // Bola indo para IA
+        predictionX = tBX + (tSpeedX * (Math.abs(p2Racket.position.z - tBZ) / Math.abs(tSpeedZ)));
+    } else {
+        predictionX = 0; // Volta pro centro
+    }
+    if (p2Racket.position.x < predictionX - 1) p2Racket.position.x += speedIA;
+    if (p2Racket.position.x > predictionX + 1) p2Racket.position.x -= speedIA;
+    p2Racket.position.y = -3; // IA fica numa altura fixa
+
+    // Física da Bola
+    tBX += tSpeedX;
+    tBZ += tSpeedZ;
+    tBY += tSpeedY;
+    tSpeedY -= 0.01; // Gravidade
+    
+    if (tBY < -4.5) { // Quique no chão
+        tBY = -4.5;
+        tSpeedY = Math.abs(tSpeedY) * 0.8; 
+    }
+    
+    tBall.position.set(tBX, tBY, tBZ);
+
+    // Colisão P1 (Jogador)
+    if (tBZ > 19 && tBZ < 21 && tSpeedZ > 0) {
+        let dist = Math.hypot(tBX - p1Racket.position.x, tBY - p1Racket.position.y);
+        if (dist < 4.0) {
+            tSpeedZ = -Math.abs(tSpeedZ) - 0.05;
+            tSpeedX = (tBX - p1Racket.position.x) * 0.15;
+            tSpeedY = 0.3 + Math.random() * 0.2; // Hit para cima
+        }
+    } else if (tBZ > 25) { // Passou do jogador
+        triggerTennisGoal(2);
+    }
+
+    // Colisão P2 (Inimigo)
+    if (tBZ < -19 && tBZ > -21 && tSpeedZ < 0) {
+        let dist = Math.hypot(tBX - p2Racket.position.x, tBY - p2Racket.position.y);
+        if (dist < 4.0) {
+            tSpeedZ = Math.abs(tSpeedZ) + 0.05;
+            tSpeedX = (tBX - p2Racket.position.x) * 0.15;
+            tSpeedY = 0.3 + Math.random() * 0.2;
+        }
+    } else if (tBZ < -25) { // Passou do inimigo
+        triggerTennisGoal(1);
+    }
+}
+
+function triggerTennisGoal(scorer) {
+    if (scorer === 1) {
+        if(tP1Score === 3 && tP2Score === 3) tP1Score = 4; // ADV
+        else if (tP1Score === 4 && tP2Score === 3) tP1Score = 5; // WIN from ADV
+        else if (tP2Score === 4) tP2Score = 3; // Lose ADV
+        else tP1Score++;
+    } else {
+        if(tP2Score === 3 && tP1Score === 3) tP2Score = 4; // ADV
+        else if (tP2Score === 4 && tP1Score === 3) tP2Score = 5; // WIN from ADV
+        else if (tP1Score === 4) tP1Score = 3; // Lose ADV
+        else tP2Score++;
+    }
+
+    updateTennisScoreHUD();
+
+    if (tP1Score >= 4 && tP1Score - tP2Score >= 2) return winTennis(1);
+    if (tP2Score >= 4 && tP2Score - tP1Score >= 2) return winTennis(2);
+
+    isGoalPause = true;
+    let el = document.getElementById('goal-alert');
+    if(!el) {
+        el = document.createElement('div');
+        el.id = 'goal-alert';
+        el.style.position = 'absolute';
+        el.style.top = '45%'; el.style.left = '50%';
+        el.style.transform = 'translate(-50%, -50%)';
+        el.style.fontSize = '8em'; el.style.fontWeight = '800';
+        el.style.textShadow = '0 0 40px currentColor';
+        el.style.zIndex = '2000';
+        el.style.animation = 'popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        document.getElementById('game-ui-screen').appendChild(el);
+    }
+    el.innerText = "POINT!";
+    el.style.color = scorer === 2 ? '#3366FF' : '#FF3333';
+    el.style.display = 'block';
+    
+    spawnConfetti(scorer === 2);
+    
+    setTimeout(() => {
+        el.style.display = 'none';
+        resetTennisBall(scorer);
+        isGoalPause = false;
+    }, 1500);
+}
+
+function winTennis(winner) {
+    tennisShowingWin = true;
+    let winnerText = document.getElementById('winner-text');
+    winnerText.style.display = 'block';
+    winnerText.innerText = (winner === 1) ? "USER WINS GAME!" : "SYSTEM WINS GAME!";
+}
+
+
+// ==========================================
+// MOTO RACER LOGIC
+// ==========================================
+let motoActive = false;
+let motoShowingWin = false;
+let motoGroup = new THREE.Group();
+scene.add(motoGroup);
+motoGroup.visible = false;
+
+// Moto Asset (Neon)
+const motoTex = textureLoader.load('assets/moto.jpg');
+const motoMat = new THREE.MeshBasicMaterial({ map: motoTex, transparent: true, blending: THREE.AdditiveBlending });
+const playerMoto = new THREE.Mesh(new THREE.PlaneGeometry(6, 6), motoMat);
+playerMoto.rotation.x = -Math.PI / 2;
+playerMoto.position.set(0, -4.9, 10); // LARGADA ESTÁTICA
+motoGroup.add(playerMoto);
+
+// Pista Cyberpunk (Infinito)
+const roadGeom = new THREE.PlaneGeometry(40, 200);
+const roadMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 1.0 });
+const road = new THREE.Mesh(roadGeom, roadMat);
+road.rotation.x = -Math.PI / 2;
+road.position.y = -5;
+motoGroup.add(road);
+
+// Obstáculos
+const obsGeom = new THREE.BoxGeometry(4, 2, 4);
+const obsMat = new THREE.MeshStandardMaterial({ color: 0xff0055 });
+let obstacles = [];
+for(let i=0; i<10; i++) {
+    let obs = new THREE.Mesh(obsGeom, obsMat);
+    obs.position.set((Math.random() - 0.5) * 30, -4, -100 - (Math.random() * 200));
+    motoGroup.add(obs);
+    obstacles.push(obs);
+}
+
+let mScore = 0;
+let motoStarted = false; // "como que faz para a moto ficar no canto parada sem ficar mexendo"
+
+function initMoto3D() {
+    motoActive = true;
+    motoShowingWin = false;
+    motoStarted = false;
+    motoGroup.visible = true;
+    particlesMesh.visible = false;
+    gridHelper.visible = true; // Mantém a grid para efeito de velocidade synthwave!
+    gridHelper.material.color.setHex(0xff00ff); // Neon pink grid para a corrida
+    
+    // Câmera perseguição top-down 3D
+    camera.position.set(0, 15, 30);
+    camera.lookAt(0, -5, 0);
+    
+    playerMoto.position.set(0, -4.9, 15); // LARGADA FIxa no fundo
+    
+    mScore = 0;
+    document.getElementById('p1-score-txt').innerText = "0";
+    document.getElementById('p2-score-txt').innerText = "";
+    document.getElementById('score-board').style.display = 'flex';
+    document.getElementById('winner-text').style.display = 'none';
+
+    // Reset obstáculos
+    obstacles.forEach((o, i) => { o.position.set((Math.random() - 0.5) * 30, -4, -50 - (i * 40)); });
+}
+
+function stopMoto3D() {
+    motoActive = false;
+    motoGroup.visible = false;
+    particlesMesh.visible = true;
+    gridHelper.visible = true;
+    gridHelper.material.color.setHex(0x107c10); // Voltar green
+    document.getElementById('score-board').style.display = 'none';
+    camera.position.set(0, 0, 30);
+    camera.lookAt(0, 0, 0);
+}
+
+function updateMoto3D() {
+    if(!motoActive || motoShowingWin || window.isPaused) return;
+
+    // Alvo do usuário
+    let targetX = (window.hand1X - 0.5) * 30;
+    
+    // Detecção de Largada: Se a mão do usuário se mover para o centro, a corrida inicia!
+    if (!motoStarted) {
+        if (Math.abs(targetX - playerMoto.position.x) > 5.0) {
+            motoStarted = true; 
+        } else {
+            return; // Permanece no canto/centro parada até largada!
+        }
+    }
+
+    // Moto persegue a mão em X, cria inclinação
+    let oldX = playerMoto.position.x;
+    playerMoto.position.x += (targetX - playerMoto.position.x) * 0.15;
+    let tilt = (playerMoto.position.x - oldX);
+    playerMoto.rotation.y = -tilt * 0.1; // Inclina para os lados
+
+    // Movimento de Obstáculos e Pista (Ilusão de movimento)
+    let speed = 1.0 + (window.difficultyMultiplier * 0.5);
+    gridHelper.position.z = (gridHelper.position.z + speed) % 10; // Grid veloz
+    
+    obstacles.forEach(obs => {
+        obs.position.z += speed;
+        // Colisão
+        if (Math.abs(obs.position.z - playerMoto.position.z) < 4 && Math.abs(obs.position.x - playerMoto.position.x) < 4) {
+            // BATIDA! Perdeu!
+            motoShowingWin = true;
+            let winnerText = document.getElementById('winner-text');
+            winnerText.style.display = 'block';
+            winnerText.innerText = "CRASHED! SCORE: " + Math.floor(mScore);
+            winnerText.style.color = '#ff0055';
+            setTimeout(() => stopMoto3D(), 4000);
+        }
+        // Loop de obstáculo
+        if (obs.position.z > 20) {
+            obs.position.z = -100 - (Math.random() * 50);
+            obs.position.x = (Math.random() - 0.5) * 30;
+            mScore += 10; // Ganha pontos
+            document.getElementById('p1-score-txt').innerText = Math.floor(mScore);
+        }
+    });
+}
+
+
+// ==========================================
 // RENDER LOOP
 // ==========================================
 camera.position.z = 30;
@@ -310,12 +644,12 @@ function animate() {
     if (particlesMesh.visible) {
         particlesMesh.rotation.y += 0.001; 
         particlesMesh.rotation.x += 0.0005;
-        
-        // Mover as grids para efeito de velocidade
-        gridHelper.position.z = (gridHelper.position.z + 0.1) % 10;
+        if (!motoActive) gridHelper.position.z = (gridHelper.position.z + 0.1) % 10;
     }
 
     if (pongActive) updatePong3D();
+    if (tennisActive) updateTennis3D();
+    if (motoActive) updateMoto3D();
     
     updateConfetti();
     

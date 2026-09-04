@@ -185,6 +185,10 @@ function launchGame() {
     
     if (pendingGame === 'pong' && typeof initPong3D === 'function') {
         initPong3D();
+    } else if (pendingGame === 'tennis' && typeof initTennis3D === 'function') {
+        initTennis3D();
+    } else if (pendingGame === 'moto' && typeof initMoto3D === 'function') {
+        initMoto3D();
     } else {
         document.getElementById('winner-text').style.display = 'block';
         document.getElementById('winner-text').innerText = translations[window.currentLang].game_offline;
@@ -194,6 +198,8 @@ function launchGame() {
 function backToMenu() {
     window.activeGame = null;
     if(typeof stopPong3D === 'function') stopPong3D();
+    if(typeof stopTennis3D === 'function') stopTennis3D();
+    if(typeof stopMoto3D === 'function') stopMoto3D();
     navTo('select-screen');
 }
 
