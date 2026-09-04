@@ -345,8 +345,8 @@ tennisGroup.add(p2Racket);
 
 // Bola (Asset PNG)
 const ballTex = textureLoader.load('assets/ball.jpg');
-const ballMat = new THREE.MeshBasicMaterial({ map: ballTex, transparent: true, blending: THREE.AdditiveBlending });
-const tBall = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), ballMat);
+const tBallMat = new THREE.MeshBasicMaterial({ map: ballTex, transparent: true, blending: THREE.AdditiveBlending });
+const tBall = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), tBallMat);
 tennisGroup.add(tBall);
 
 let tBX = 0, tBZ = 0, tBY = -4, tSpeedX = 0, tSpeedZ = 0, tSpeedY = 0;
