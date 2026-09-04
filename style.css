@@ -48,15 +48,13 @@ body {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    font-size: 1.5em;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     cursor: pointer;
-    background: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.1);
+    background-size: cover;
+    background-position: center;
     border: 2px solid transparent;
     transition: all 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
 }
 
 .lang-btn.selected {
@@ -79,11 +77,12 @@ body {
     top: 30px; left: 30px;
     width: 180px; height: 180px;
     border-radius: 50%;
-    border: 3px solid var(--text-primary); /* Moldura simples e elegante */
+    border: 3px solid var(--text-primary);
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
     z-index: 1000;
     overflow: hidden;
     background: #000;
+    pointer-events: none; /* Câmera nunca bloqueia os botões atrás dela */
 }
 
 #input_video {
@@ -194,3 +193,37 @@ body {
 }
 
 .back-btn { position: absolute; top: 30px; left: 240px; z-index: 10; }
+
+/* ========================================== */
+/* RESPONSIVIDADE (Telas menores e Laptops)   */
+/* ========================================== */
+@media (max-width: 1400px), (max-height: 800px) {
+    .brand-title { font-size: 4em; }
+    .screen-title { font-size: 2.5em; margin-bottom: 10px; }
+    .subtitle { font-size: 1.2em; margin-bottom: 30px; }
+    
+    .wii-btn.btn-primary { font-size: 1.3em; padding: 15px 40px; }
+    .wii-btn { padding: 12px 25px; font-size: 1em; }
+    
+    .game-card { width: 220px; height: 160px; }
+    
+    /* Encolher a câmera para não atrapalhar a UI */
+    #hud-container {
+        width: 120px; height: 120px;
+        top: 20px; left: 20px;
+        border-width: 2px;
+    }
+    
+    /* Reposicionar botão de voltar */
+    .back-btn { top: 20px; left: 160px; padding: 10px 20px; }
+    
+    /* Encolher menu de idiomas */
+    #lang-selector { top: 20px; right: 20px; gap: 10px; }
+    .lang-btn { width: 40px; height: 40px; }
+}
+
+@media (max-height: 650px) {
+    .screen { padding: 10px; }
+    .menu-layout { gap: 10px; }
+    .brand-title { font-size: 3em; }
+}

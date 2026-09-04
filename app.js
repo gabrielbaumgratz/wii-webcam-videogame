@@ -122,7 +122,7 @@ function setLang(lang) {
 // ==========================================
 // GLOBAL SETTINGS
 // ==========================================
-window.sensitivity = 1.2;
+window.sensitivity = 2.0; // Sensibilidade padrão aumentada
 
 // PER-GAME SETTINGS
 window.activeGame = null;

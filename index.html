@@ -28,10 +28,10 @@
 
     <!-- LANGUAGE SELECTOR -->
     <div id="lang-selector">
-        <button class="wii-btn lang-btn glass-ui selected" onclick="setLang('pt')" title="Português">🇧🇷</button>
-        <button class="wii-btn lang-btn glass-ui" onclick="setLang('en')" title="English">🇺🇸</button>
-        <button class="wii-btn lang-btn glass-ui" onclick="setLang('es')" title="Español">🇪🇸</button>
-        <button class="wii-btn lang-btn glass-ui" onclick="setLang('de')" title="Deutsch">🇩🇪</button>
+        <div class="lang-btn selected" style="background-image: url('https://flagcdn.com/w80/br.png');" onclick="setLang('pt')" title="Português"></div>
+        <div class="lang-btn" style="background-image: url('https://flagcdn.com/w80/us.png');" onclick="setLang('en')" title="English"></div>
+        <div class="lang-btn" style="background-image: url('https://flagcdn.com/w80/es.png');" onclick="setLang('es')" title="Español"></div>
+        <div class="lang-btn" style="background-image: url('https://flagcdn.com/w80/de.png');" onclick="setLang('de')" title="Deutsch"></div>
     </div>
 
     <!-- MAIN APP CONTAINER -->
@@ -56,9 +56,9 @@
                 <h2 data-i18n="cam_sens_title">Sensibilidade da Câmera</h2>
                 <p data-i18n="cam_sens_desc">Ajusta o quanto sua mão real move o cursor.</p>
                 <div class="menu-layout row" id="sensitivity-options">
-                    <button class="wii-btn glass-ui" onclick="setSensitivity(0.8, this)" data-i18n="sens_low">Baixa</button>
-                    <button class="wii-btn glass-ui selected" onclick="setSensitivity(1.2, this)" data-i18n="sens_balanced">Normal</button>
-                    <button class="wii-btn glass-ui" onclick="setSensitivity(1.8, this)" data-i18n="sens_high">Alta</button>
+                    <button class="wii-btn glass-ui" onclick="setSensitivity(1.5, this)" data-i18n="sens_low">Baixa</button>
+                    <button class="wii-btn glass-ui selected" onclick="setSensitivity(2.0, this)" data-i18n="sens_balanced">Normal</button>
+                    <button class="wii-btn glass-ui" onclick="setSensitivity(3.0, this)" data-i18n="sens_high">Alta</button>
                 </div>
             </div>
             <br>
