@@ -35,21 +35,44 @@ No se requiere hardware adicional. Tu dedo actúa como el ratón para la navegac
   - **Moto Racer:** Desplaza tu mano lateralmente para guiar la motocicleta y esquivar obstáculos.
   - **Hockey de Mesa:** Defiende tu lado moviendo la mano verticalmente para golpear el disco (Modo Solo o Pantalla Dividida local).
 
-## Cómo Ejecutarlo Localmente
+## 🚀 Cómo Ejecutarlo Localmente (Paso a Paso)
+ 
+Para proteger tu privacidad, los navegadores modernos bloquean el acceso a la cámara si abres un archivo HTML directamente. Para jugar, necesitamos "fingir" que el sitio está en internet creando un **servidor local**. ¡Es muy fácil, solo sigue estas instrucciones!
 
-Los navegadores modernos bloquean el acceso a la cámara al abrir archivos HTML directamente desde el disco. Por lo tanto, necesitas iniciar un servidor local.
+### Requisitos previos
+Necesitarás al menos UNO de los siguientes programas instalados en tu computadora:
+- [Node.js](https://nodejs.org/es) (Versión 14+ recomendada)
+- **O** [Python](https://www.python.org/downloads/) (Versión 3.7+ recomendada)
 
-1. Clona el repositorio:
+### Paso 1: Descargar los Archivos
+1. Descarga los archivos (Usa el botón verde **"Code" -> "Download ZIP"** en la parte superior), o si prefieres la terminal:
    ```bash
    git clone https://github.com/gabrielbaumgratz/wii-webcam-videogame.git
-   cd wii-webcam-videogame
    ```
-2. Inicia el servidor local (Ejemplo con Node.js):
-   ```bash
-   npx http-server -p 8000
-   ```
-3. Abre `http://localhost:8000` en tu navegador.
-4. Concede el permiso de la cámara.
+2. Si descargaste el ZIP, extráelo en una carpeta de tu computadora.
+3. Abre tu terminal (Símbolo del sistema/PowerShell en Windows, Terminal en Mac/Linux) y navega hasta la carpeta del juego.
+
+### Paso 2: Iniciar el Servidor Local
+Dentro de la carpeta del juego, escribe **SOLO UNO** de los siguientes comandos, dependiendo de lo que hayas instalado:
+
+**Si elegiste Node.js:**
+```bash
+npx http-server -p 8000
+```
+*(Si te pide instalar el paquete, escribe "y" y presiona Enter)*
+
+**Si elegiste Python:**
+```bash
+python -m http.server 8000
+```
+
+### Paso 3: ¡A Jugar!
+1. **No cierres la ventana de la terminal** (es el motor del juego por ahora).
+2. Abre Google Chrome, Edge o Safari.
+3. En la barra de direcciones, escribe EXACTAMENTE este enlace y presiona Enter:
+   👉 **`http://localhost:8000`**
+4. El navegador te preguntará si permites el acceso a la Cámara. Haz clic en **Permitir**.
+5. ¡Aléjate un poco, levanta la mano y diviértete!
 
 ---
 

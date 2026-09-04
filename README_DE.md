@@ -35,21 +35,44 @@ Keine zusätzliche Hardware erforderlich. Ihr Finger fungiert als Maus für die 
   - **Moto Racer:** Bewegen Sie Ihre Hand seitwärts, um das Motorrad zu lenken und Hindernissen auszuweichen.
   - **Air Hockey:** Verteidigen Sie Ihre Seite, indem Sie Ihre Hand vertikal bewegen, um den Puck zu schlagen (Solo- oder lokaler Split-Screen-Modus).
 
-## Wie man es lokal ausführt
+## 🚀 Wie man es lokal ausführt (Schritt für Schritt)
+ 
+Um Ihre Privatsphäre zu schützen, blockieren moderne Browser den Kamerazugriff, wenn Sie HTML-Dateien direkt von der Festplatte öffnen. Um zu spielen, müssen wir einen **lokalen Server** erstellen. Es ist sehr einfach, folgen Sie einfach diesen Anweisungen!
 
-Moderne Browser blockieren den Zugriff auf die Webcam, wenn HTML-Dateien direkt von der Festplatte geöffnet werden. Daher müssen Sie einen lokalen Server starten.
+### Voraussetzungen
+Sie benötigen mindestens EINES der folgenden Programme auf Ihrem Computer:
+- [Node.js](https://nodejs.org/) (Version 14+ empfohlen)
+- **ODER** [Python](https://www.python.org/downloads/) (Version 3.7+ empfohlen)
 
-1. Klonen Sie das Repository:
+### Schritt 1: Dateien herunterladen
+1. Laden Sie die Spieldateien herunter (Verwenden Sie den grünen Button **"Code" -> "Download ZIP"** oben), oder über das Terminal:
    ```bash
    git clone https://github.com/gabrielbaumgratz/wii-webcam-videogame.git
-   cd wii-webcam-videogame
    ```
-2. Starten Sie den lokalen Server (Beispiel mit Node.js):
-   ```bash
-   npx http-server -p 8000
-   ```
-3. Öffnen Sie `http://localhost:8000` in Ihrem Browser.
-4. Erteilen Sie die Kameraberechtigung.
+2. Entpacken Sie die ZIP-Datei in einen Ordner.
+3. Öffnen Sie Ihr Terminal (Eingabeaufforderung/PowerShell unter Windows, Terminal unter Mac/Linux) und navigieren Sie zum Spielordner.
+
+### Schritt 2: Lokalen Server starten
+Geben Sie im Spielordner **NUR EINEN** der folgenden Befehle ein, je nachdem, was Sie installiert haben:
+
+**Wenn Sie Node.js gewählt haben:**
+```bash
+npx http-server -p 8000
+```
+*(Wenn Sie zur Installation des Pakets aufgefordert werden, geben Sie "y" ein und drücken Sie Enter)*
+
+**Wenn Sie Python gewählt haben:**
+```bash
+python -m http.server 8000
+```
+
+### Schritt 3: Zeit zum Spielen!
+1. **Schließen Sie das Terminalfenster nicht** (es ist vorerst der Motor des Spiels).
+2. Öffnen Sie Google Chrome, Edge oder Safari.
+3. Geben Sie in der Adressleiste GENAU diesen Link ein und drücken Sie Enter:
+   👉 **`http://localhost:8000`**
+4. Der Browser fragt, ob Sie den Kamerazugriff erlauben. Klicken Sie auf **Zulassen**.
+5. Treten Sie ein wenig zurück, heben Sie die Hand und haben Sie Spaß!
 
 ---
 
