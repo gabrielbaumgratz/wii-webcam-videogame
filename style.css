@@ -247,6 +247,22 @@ body {
 
 .back-btn { position: absolute; top: 30px; left: 240px; z-index: 10; }
 
+/* IN-GAME HUD (Placar) */
+#score-board {
+    width: 100%;
+    justify-content: space-between;
+    position: absolute;
+    top: 50px;
+    padding: 0 350px; /* Afastado da câmera e do botão */
+    box-sizing: border-box;
+    font-size: 6em;
+    font-weight: 800;
+    pointer-events: none;
+    z-index: 1000;
+}
+#p1-score-txt { color: #FF3333; text-shadow: 0 0 30px #FF3333; }
+#p2-score-txt { color: #3366FF; text-shadow: 0 0 30px #3366FF; }
+
 /* ========================================== */
 /* RESPONSIVIDADE (Telas menores e Laptops)   */
 /* ========================================== */
@@ -267,6 +283,7 @@ body {
     }
     
     .back-btn { top: 20px; left: 160px; padding: 10px 20px; min-width: 100px; }
+    #score-board { padding: 0 160px; font-size: 4em; }
     
     #lang-selector { top: 20px; right: 20px; gap: 10px; }
     .lang-btn { padding: 5px 10px; font-size: 0.9em; min-width: 60px; }
@@ -288,6 +305,7 @@ body {
     
     #hud-container { width: 80px; height: 80px; top: 10px; left: 10px; }
     .back-btn { top: 10px; left: 100px; padding: 8px 15px; font-size: 0.8em; min-width: 100px; }
+    #score-board { padding: 0 20px; top: 100px; font-size: 3.5em; justify-content: space-around; }
     
     #lang-selector { top: 10px; right: 10px; gap: 5px; flex-wrap: wrap; width: 120px; justify-content: flex-end; }
     
