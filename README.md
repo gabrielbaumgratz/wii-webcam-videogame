@@ -6,14 +6,6 @@ Nenhum hardware extra é necessário. O seu dedo atua como o mouse para a navega
 
 ---
 
-## Tecnologias Utilizadas
-
-O projeto foi desenvolvido para rodar de forma leve e responsiva direto no navegador (client-side).
-
-- **Frontend:** HTML5, CSS3 e JavaScript puro (Vanilla JS). Renderização gráfica feita via Canvas API.
-- **Inteligência Artificial:** O rastreamento de movimento utiliza a biblioteca de visão computacional **MediaPipe** (do Google). 
-- **Performance:** A inteligência artificial é executada sobre **WebAssembly (WASM)**. Isso permite que o navegador processe o feed da câmera usando código otimizado de baixo nível em tempo real (cerca de 60 quadros por segundo), sem a necessidade de enviar dados para servidores externos.
-
 ## Como Funciona
 
 - **Captura e Rastreamento:** O jogo acessa a sua webcam e detecta a geometria da sua mão instantaneamente.
@@ -38,6 +30,16 @@ Os navegadores modernos bloqueiam o acesso à câmera ao abrir arquivos HTML dir
    ```
 3. Acesse `http://localhost:8000` em seu navegador.
 4. Conceda a permissão de uso da câmera.
+
+---
+
+## Tecnologias Utilizadas
+
+O projeto foi desenvolvido para rodar de forma leve e responsiva direto no navegador (client-side).
+
+- **Frontend:** HTML5, CSS3 e JavaScript puro (Vanilla JS). Renderização gráfica feita via Canvas API.
+- **Inteligência Artificial:** O rastreamento de movimento utiliza a biblioteca de visão computacional **MediaPipe** (do Google). 
+- **Performance:** A inteligência artificial é executada sobre **WebAssembly (WASM)**. Isso permite que o navegador processe o feed da câmera usando código otimizado de baixo nível em tempo real (cerca de 60 quadros por segundo), sem a necessidade de enviar dados para servidores externos.
 
 ---
 
