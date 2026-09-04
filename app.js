@@ -219,36 +219,20 @@ function updateCursor() {
         let foundBtn = elements.find(el => el.classList && (el.classList.contains('wii-btn') || el.classList.contains('lang-btn')));
 
         let coreRadius = 8;
-        let ringRadius = 28;
-        let accentColor = '#0070cc'; // PS Blue 
+        let ringRadius = window.isPinching1 ? 15 : 28;
+        let accentColor = window.isPinching1 ? '#e60012' : '#0070cc'; 
 
         if (foundBtn) {
-            accentColor = '#e60012'; // Nintendo Red hover
             if (hoverTarget !== foundBtn) {
                 if(hoverTarget) hoverTarget.classList.remove('hovering');
                 hoverTarget = foundBtn;
-                hoverStartTime = performance.now();
                 hoverTarget.classList.add('hovering');
-            } else {
-                let elapsed = performance.now() - hoverStartTime;
-                let progress = Math.min(elapsed / DWELL_TIME, 1);
-                
-                ringRadius = 28 - (progress * 6); // Compress inward
-                
-                // Drawing loading ring
-                cursorCtx.beginPath();
-                cursorCtx.arc(cx, cy, 35, -Math.PI/2, (-Math.PI/2) + (Math.PI * 2 * progress));
-                cursorCtx.strokeStyle = '#FFFFFF';
-                cursorCtx.lineWidth = 5;
-                cursorCtx.lineCap = 'round';
-                cursorCtx.stroke();
-
-                if (progress >= 1) {
-                    hoverTarget.click();
-                    hoverTarget.classList.remove('hovering');
-                    hoverTarget = null; 
-                    hoverStartTime = performance.now() + 1500; // Cooldown
-                }
+            }
+            
+            // Lógica de Clique por Pinça
+            let wasPinching = window.lastPinchState || false;
+            if (window.isPinching1 && !wasPinching) {
+                hoverTarget.click();
             }
         } else {
             if (hoverTarget) {
@@ -256,6 +240,7 @@ function updateCursor() {
                 hoverTarget = null;
             }
         }
+        window.lastPinchState = window.isPinching1;
 
         // Draw Outer Translucent Ring
         cursorCtx.beginPath();

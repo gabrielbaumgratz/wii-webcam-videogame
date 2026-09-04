@@ -37,14 +37,18 @@ function onResults(results) {
 
         handsData.sort((a, b) => a.x - b.x);
 
-        let tip1 = handsData[0].marks[8];
-        targetHand1X = applySensitivity(tip1.x);
-        targetHand1Y = applySensitivity(tip1.y);
+        let thumb1 = handsData[0].marks[4];
+        let index1 = handsData[0].marks[8];
+        targetHand1X = applySensitivity(index1.x);
+        targetHand1Y = applySensitivity(index1.y);
         
-        // Ponto Vermelho super rápido
-        canvasCtx.fillStyle = '#e60012';
+        let dist1 = Math.hypot(thumb1.x - index1.x, thumb1.y - index1.y);
+        window.isPinching1 = dist1 < 0.05;
+        
+        // Ponto super rápido
+        canvasCtx.fillStyle = window.isPinching1 ? '#e60012' : '#ffffff';
         canvasCtx.beginPath();
-        canvasCtx.arc(tip1.x * canvasElement.width, tip1.y * canvasElement.height, 4, 0, Math.PI*2);
+        canvasCtx.arc(index1.x * canvasElement.width, index1.y * canvasElement.height, 4, 0, Math.PI*2);
         canvasCtx.fill();
 
         if (handsData.length > 1) {

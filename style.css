@@ -45,16 +45,25 @@ body {
 }
 
 .lang-btn {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 1.1em;
+    font-weight: bold;
     cursor: pointer;
     background-color: rgba(255, 255, 255, 0.1);
-    background-size: cover;
-    background-position: center;
     border: 2px solid transparent;
     transition: all 0.2s;
     box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    color: white;
+}
+
+.lang-btn img {
+    width: 24px;
+    height: 16px;
+    border-radius: 2px;
 }
 
 .lang-btn.selected {
@@ -146,40 +155,42 @@ body {
     text-transform: uppercase;
 }
 
-/* Buttons (Console Style) */
+/* Buttons (Console Style - Pill Shape) */
 .menu-layout { display: flex; flex-direction: column; gap: 20px; align-items: center; }
 .menu-layout.row { flex-direction: row; flex-wrap: wrap; justify-content: center; }
 
 .wii-btn {
     color: white;
-    padding: 18px 40px;
+    padding: 15px 35px;
     font-size: 1.2em;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 2px;
-    background: rgba(255, 255, 255, 0.1);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.02));
     border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px; /* Clean console rounded rect */
-    transition: all 0.1s; /* Rápido, sem delay */
+    border-radius: 50px; /* Formato Pílula elegante */
+    transition: all 0.15s ease-out;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
 .wii-btn.btn-primary { 
-    font-size: 1.6em; 
-    padding: 25px 60px; 
-    background: rgba(16, 124, 16, 0.8); /* Xbox Green */
+    font-size: 1.5em; 
+    padding: 20px 50px; 
+    background: linear-gradient(135deg, rgba(16, 124, 16, 0.9), rgba(16, 124, 16, 0.4)); /* Xbox Green */
     border-color: var(--xbox-green);
 }
 
 /* HOVER / DWELL STATE */
 .wii-btn.hovering {
-    background: var(--nin-red); /* Nintendo Red Hover */
+    background: linear-gradient(135deg, var(--nin-red), rgba(230,0,18,0.5));
     border-color: #fff;
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(230, 0, 18, 0.6);
+    transform: scale(1.08);
+    box-shadow: 0 0 25px rgba(230, 0, 18, 0.8);
 }
 
 .wii-btn.selected {
-    background: var(--ps-blue); /* PlayStation Blue Selected */
+    background: linear-gradient(135deg, var(--ps-blue), rgba(0,112,204,0.5));
     border-color: #fff;
 }
 
