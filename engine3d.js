@@ -309,25 +309,34 @@ scene.add(tennisGroup);
 tennisGroup.visible = false;
 
 // Assets: Quadra e Bola
-const tPlaneGeom = new THREE.PlaneGeometry(30, 60);
-const tPlaneMat = new THREE.MeshStandardMaterial({ color: 0x11aa33, roughness: 0.8 }); // Quadra verde
-const tCourt = new THREE.Mesh(tPlaneGeom, tPlaneMat);
-tCourt.rotation.x = -Math.PI / 2;
-tCourt.position.y = -5;
-tennisGroup.add(tCourt);
+// Área de fora da Quadra (Azul)
+const outerPlaneGeo = new THREE.PlaneGeometry(50, 70);
+const outerPlaneMat = new THREE.MeshStandardMaterial({ color: 0x1155cc, roughness: 0.8 });
+const outerPlane = new THREE.Mesh(outerPlaneGeo, outerPlaneMat);
+outerPlane.rotation.x = -Math.PI / 2;
+outerPlane.position.y = -5.0;
+tennisGroup.add(outerPlane);
+
+// Quadra Interna (Verde)
+const tPlaneGeo = new THREE.PlaneGeometry(30, 60);
+const tPlaneMat = new THREE.MeshStandardMaterial({ color: 0x11aa33, roughness: 0.8 });
+const tPlane = new THREE.Mesh(tPlaneGeo, tPlaneMat);
+tPlane.rotation.x = -Math.PI / 2;
+tPlane.position.y = -4.95;
+tennisGroup.add(tPlane);
 
 // Linhas da quadra
-const tLineMat = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 });
-const tLines = new THREE.Group();
-const rectGeom = new THREE.EdgesGeometry(new THREE.PlaneGeometry(28, 58));
-const rectLine = new THREE.LineSegments(rectGeom, tLineMat);
-rectLine.rotation.x = -Math.PI / 2;
-rectLine.position.y = -4.9;
-tLines.add(rectLine);
-const netGeom = new THREE.BoxGeometry(30, 2, 0.1);
-const netMat = new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: 0.5 });
-const net = new THREE.Mesh(netGeom, netMat);
-net.position.set(0, -4, 0);
+const tLinesGeo = new THREE.EdgesGeometry(tPlaneGeo);
+const tLinesMat = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 });
+const tLines = new THREE.LineSegments(tLinesGeo, tLinesMat);
+tLines.rotation.x = -Math.PI / 2;
+tLines.position.y = -4.9;
+
+// Rede
+const netGeo = new THREE.PlaneGeometry(30, 4);
+const netMat = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, transparent: true, opacity: 0.5 });
+const net = new THREE.Mesh(netGeo, netMat);
+net.position.y = -2.9;
 tLines.add(net);
 tennisGroup.add(tLines);
 
@@ -360,8 +369,8 @@ for(let i = -20; i <= 20; i += 2) {
 tennisGroup.add(audienceGroup);
 
 // Bola (Asset PNG)
-const ballTex = textureLoader.load('assets/ball.jpg');
-const tBallMat = new THREE.MeshBasicMaterial({ map: ballTex, transparent: true, blending: THREE.AdditiveBlending });
+const ballTex = textureLoader.load('assets/user_ball.png');
+const tBallMat = new THREE.MeshBasicMaterial({ map: ballTex, transparent: true });
 const tBall = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), tBallMat);
 tennisGroup.add(tBall);
 
@@ -377,8 +386,8 @@ function initTennis3D() {
     particlesMesh.visible = false;
     gridHelper.visible = false;
     
-    // Visão isométrica nas costas do jogador
-    camera.position.set(0, 15, 35);
+    // Visão isométrica MAIS BAIXA nas costas do jogador
+    camera.position.set(0, 10, 35);
     camera.lookAt(0, -5, 0);
     
     tP1Score = 0; tP2Score = 0;

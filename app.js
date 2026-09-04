@@ -203,6 +203,18 @@ function openGameHub(gameId) {
     pendingGame = gameId;
     let title = gameId === 'pong' ? 'AIR HOCKEY 3D' : (gameId === 'tennis' ? 'COURT TENNIS' : 'MOTO RACER');
     document.getElementById('game-hub-title').innerText = title + ' CONFIG';
+    
+    // Desabilitar co-op local para Tennis e Moto Racer
+    let playersContainer = document.getElementById('players-config-container');
+    if (playersContainer) {
+        if (gameId === 'moto' || gameId === 'tennis') {
+            playersContainer.style.display = 'none';
+            window.gameConfigs[pendingGame].mode = 1; // Força Singleplayer
+        } else {
+            playersContainer.style.display = 'block';
+        }
+    }
+    
     navTo('game-hub-screen');
 }
 
