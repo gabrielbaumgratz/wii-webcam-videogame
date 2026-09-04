@@ -1,12 +1,12 @@
 :root {
-    --deep-navy: #051A42;
-    --atmos-blue: #486496;
-    --accent-green: #AFED91;
+    --deep-green: #0a2e12;
+    --neon-green: #37b24d;
+    --accent-light: #AFED91;
     --text-primary: #FFFFFF;
 }
 
 body {
-    background-color: var(--deep-navy); /* Fallback */
+    background-color: var(--deep-green);
     color: var(--text-primary);
     font-family: 'Outfit', sans-serif;
     margin: 0;
@@ -23,11 +23,31 @@ body {
     z-index: -1;
 }
 
-/* Highly Optimized UI Glass (NO Heavy Shadows/Blurs) */
+/* Highly Animated Complex UI Glass */
 .glass-ui {
-    background: rgba(5, 26, 66, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(10, 46, 18, 0.7), rgba(55, 178, 77, 0.2));
+    border: 2px solid rgba(175, 237, 145, 0.3);
+    border-radius: 16px;
+    box-shadow: 0 0 30px rgba(55, 178, 77, 0.2), inset 0 0 20px rgba(175, 237, 145, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Moving scanline effect for complexity */
+.glass-ui::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: linear-gradient(rgba(255,255,255,0), rgba(175, 237, 145, 0.1), rgba(255,255,255,0));
+    transform: rotate(30deg);
+    animation: scanline 4s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes scanline {
+    0% { transform: rotate(30deg) translateY(-100%); }
+    100% { transform: rotate(30deg) translateY(100%); }
 }
 
 /* Cursor Canvas */
@@ -43,23 +63,25 @@ body {
 #hud-container {
     position: fixed;
     bottom: 30px; right: 30px;
-    width: 220px; height: 165px;
+    width: 240px; height: 180px;
     z-index: 1000;
-    overflow: hidden;
 }
 
 #output_canvas {
     width: 100%; height: 100%;
     transform: scaleX(-1);
+    opacity: 0.9;
 }
 
 #loading-hud {
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    color: var(--accent-green);
-    font-size: 0.8em;
-    letter-spacing: 2px;
+    color: var(--accent-light);
+    font-size: 1em;
+    font-weight: bold;
+    text-shadow: 0 0 10px var(--neon-green);
+    animation: pulse 1s infinite alternate;
 }
 
 /* Screens */
@@ -73,64 +95,89 @@ body {
     padding: 40px;
     box-sizing: border-box;
 }
+.screen.active { display: flex; animation: zoomIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
 
-.screen.active {
-    display: flex;
+@keyframes zoomIn {
+    0% { opacity: 0; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
 }
 
 /* Typography */
 .brand-title {
-    font-size: 5em;
+    font-size: 6em;
     font-weight: 800;
     margin: 0;
+    text-transform: uppercase;
+    text-shadow: 0 0 20px var(--neon-green);
+    letter-spacing: 5px;
 }
 
 .screen-title {
-    font-size: 3em;
-    font-weight: 600;
-    margin-bottom: 40px;
+    font-size: 3.5em;
+    font-weight: 800;
+    margin-bottom: 20px;
+    text-shadow: 0 0 15px var(--neon-green);
 }
 
 .subtitle {
-    font-size: 1.2em;
-    color: var(--accent-green);
-    letter-spacing: 4px;
-    margin-bottom: 60px;
+    font-size: 1.5em;
+    color: var(--accent-light);
+    letter-spacing: 6px;
+    margin-bottom: 50px;
+    text-transform: uppercase;
 }
 
-.status-text {
-    color: var(--accent-green);
-}
-
-/* Buttons */
-.menu-layout { display: flex; flex-direction: column; gap: 20px; align-items: center; }
-.menu-layout.row { flex-direction: row; }
+/* Buttons with continuous animation */
+.menu-layout { display: flex; flex-direction: column; gap: 25px; align-items: center; }
+.menu-layout.row { flex-direction: row; flex-wrap: wrap; justify-content: center; }
 
 .wii-btn {
     color: white;
-    padding: 16px 32px;
-    font-size: 1.1em;
+    padding: 18px 40px;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
     cursor: pointer;
-    transition: transform 0.1s;
+    transition: all 0.2s ease;
     outline: none;
+    animation: floatBtn 3s infinite ease-in-out;
 }
 
-.wii-btn.btn-primary { font-size: 1.4em; padding: 20px 48px; }
+.wii-btn:nth-child(even) { animation-delay: 0.5s; }
+
+@keyframes floatBtn {
+    0%, 100% { transform: translateY(0); box-shadow: 0 5px 15px rgba(55, 178, 77, 0.3); }
+    50% { transform: translateY(-5px); box-shadow: 0 15px 25px rgba(175, 237, 145, 0.5); }
+}
+
+.wii-btn.btn-primary { font-size: 1.6em; padding: 25px 60px; border-width: 3px; }
 
 /* HOVER / DWELL STATE */
 .wii-btn.hovering {
-    transform: scale(1.05);
-    background: rgba(175, 237, 145, 0.2);
-    border-color: var(--accent-green);
-    color: var(--accent-green);
+    animation: none; /* Stop floating when hovering */
+    transform: scale(1.1);
+    background: rgba(175, 237, 145, 0.4);
+    border-color: var(--accent-light);
+    color: #fff;
+    box-shadow: 0 0 40px var(--neon-green), inset 0 0 20px var(--accent-light);
 }
 
-/* Settings Group */
-.settings-group { padding: 30px; margin-bottom: 20px; width: 600px; text-align: center; }
-.settings-group h2 { font-size: 1.2em; margin-top: 0; }
+.wii-btn.selected {
+    background: var(--neon-green);
+    color: black;
+    border-color: var(--accent-light);
+    box-shadow: 0 0 30px var(--accent-light);
+}
 
 /* Game Carousel */
-.game-carousel { display: flex; gap: 30px; }
-.game-card { width: 260px; height: 180px; padding: 20px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
+.game-carousel { display: flex; gap: 40px; }
+.game-card { 
+    width: 300px; height: 220px; 
+    padding: 20px; text-align: center; 
+    display: flex; flex-direction: column; 
+    justify-content: center;
+    border-width: 3px;
+}
 
-.back-btn { position: absolute; top: 30px; left: 40px; z-index: 10; }
+.back-btn { position: absolute; top: 30px; left: 40px; z-index: 10; animation: none; }
