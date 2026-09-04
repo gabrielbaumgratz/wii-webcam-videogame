@@ -22,7 +22,8 @@ const translations = {
         diff_easy: "Fácil (10pts)", diff_med: "Médio (20pts)", diff_hard: "Difícil (30pts)", diff_ext: "EXTREMO (40pts)",
         btn_launch: "INICIAR JOGO",
         btn_abort: "SAIR DO JOGO",
-        game_offline: "JOGO INDISPONÍVEL NO MOMENTO"
+        game_offline: "JOGO INDISPONÍVEL NO MOMENTO",
+        goal: "GOL!"
     },
     en: {
         subtitle: "PLAY USING ONLY YOUR CAMERA",
@@ -44,7 +45,8 @@ const translations = {
         diff_easy: "Easy (10pts)", diff_med: "Medium (20pts)", diff_hard: "Hard (30pts)", diff_ext: "EXTREME (40pts)",
         btn_launch: "START GAME",
         btn_abort: "QUIT GAME",
-        game_offline: "GAME CURRENTLY UNAVAILABLE"
+        game_offline: "GAME CURRENTLY UNAVAILABLE",
+        goal: "GOAL!"
     },
     es: {
         subtitle: "JUEGA USANDO SOLO TU CÁMARA",
@@ -66,7 +68,8 @@ const translations = {
         diff_easy: "Fácil (10pts)", diff_med: "Medio (20pts)", diff_hard: "Difícil (30pts)", diff_ext: "EXTREMO (40pts)",
         btn_launch: "INICIAR JUEGO",
         btn_abort: "SALIR DEL JUEGO",
-        game_offline: "JUEGO NO DISPONIBLE"
+        game_offline: "JUEGO NO DISPONIBLE",
+        goal: "¡GOL!"
     },
     de: {
         subtitle: "SPIELEN SIE NUR MIT IHRER KAMERA",
@@ -88,7 +91,8 @@ const translations = {
         diff_easy: "Leicht (10 Pkt)", diff_med: "Mittel (20 Pkt)", diff_hard: "Schwer (30 Pkt)", diff_ext: "EXTREM (40 Pkt)",
         btn_launch: "SPIEL STARTEN",
         btn_abort: "SPIEL BEENDEN",
-        game_offline: "SPIEL DERZEIT NICHT VERFÜGBAR"
+        game_offline: "SPIEL DERZEIT NICHT VERFÜGBAR",
+        goal: "TOR!"
     }
 };
 

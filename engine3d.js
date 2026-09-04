@@ -101,14 +101,88 @@ let p1Score = 0, p2Score = 0;
 let pongActive = false;
 let pongShowingWin = false;
 
-function resetPongBall3D() {
-    bX = 0; bZ = 0;
-    bSpeedX = -bSpeedX;
+let confettis = [];
+function spawnConfetti(isPlayer2) {
+    let baseColor = isPlayer2 ? 0x3366FF : 0xFF3333; // Azul ou Vermelho
+    for(let i = 0; i < 60; i++) {
+        let mat = new THREE.MeshBasicMaterial({ color: baseColor });
+        let hsl = {}; mat.color.getHSL(hsl);
+        mat.color.setHSL(hsl.h, hsl.s, hsl.l + (Math.random() * 0.4 - 0.2)); // Vários tons da mesma skin
+        
+        let mesh = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.5), mat);
+        mesh.position.set((Math.random() - 0.5) * 30, 15, (Math.random() - 0.5) * 20);
+        mesh.velocity = new THREE.Vector3((Math.random() - 0.5), -(Math.random() * 0.5 + 0.5), (Math.random() - 0.5));
+        mesh.rotSpeed = new THREE.Vector3(Math.random()*0.2, Math.random()*0.2, Math.random()*0.2);
+        pongGroup.add(mesh);
+        confettis.push(mesh);
+    }
+}
+
+function updateConfetti() {
+    for(let i = confettis.length - 1; i >= 0; i--) {
+        let c = confettis[i];
+        c.position.add(c.velocity);
+        c.rotation.x += c.rotSpeed.x;
+        c.rotation.y += c.rotSpeed.y;
+        if(c.position.y < -5) {
+            pongGroup.remove(c);
+            confettis.splice(i, 1);
+        }
+    }
+}
+
+let isGoalPause = false;
+
+function triggerGoal(scorer) {
+    if (scorer === 1) p1Score++;
+    else p2Score++;
     
     document.getElementById('p1-score-txt').innerText = p1Score;
     document.getElementById('p2-score-txt').innerText = p2Score;
 
     if (p1Score >= window.maxScore || p2Score >= window.maxScore) {
+        resetPongBall3D(scorer, true);
+        return;
+    }
+
+    isGoalPause = true;
+    let color = scorer === 2 ? '#3366FF' : '#FF3333';
+    
+    let el = document.getElementById('goal-alert');
+    if(!el) {
+        el = document.createElement('div');
+        el.id = 'goal-alert';
+        el.style.position = 'absolute';
+        el.style.top = '45%';
+        el.style.left = '50%';
+        el.style.transform = 'translate(-50%, -50%)';
+        el.style.fontSize = '8em';
+        el.style.fontWeight = '800';
+        el.style.textShadow = '0 0 40px currentColor';
+        el.style.zIndex = '2000';
+        el.style.animation = 'popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        document.getElementById('game-ui-screen').appendChild(el);
+    }
+    
+    el.innerText = translations[window.currentLang].goal;
+    el.style.color = color;
+    el.style.display = 'block';
+    
+    spawnConfetti(scorer === 2);
+    
+    setTimeout(() => {
+        el.style.display = 'none';
+        resetPongBall3D(scorer, false);
+        isGoalPause = false;
+    }, 1500);
+}
+
+function resetPongBall3D(lastScorer, showWin = false) {
+    bX = 0; bZ = 0;
+    // Bola vai para quem tomou o gol
+    bSpeedX = lastScorer === 1 ? -Math.abs(bSpeedX) : Math.abs(bSpeedX);
+
+    if (showWin) {
         pongShowingWin = true;
         let winnerText = document.getElementById('winner-text');
         winnerText.style.display = 'block';
@@ -160,7 +234,7 @@ function stopPong3D() {
 }
 
 function updatePong3D() {
-    if(!pongActive || pongShowingWin) return;
+    if(!pongActive || pongShowingWin || isGoalPause) return;
 
     let targetZ2 = (window.hand1Y - 0.5) * 20; 
     paddle2.position.z += (targetZ2 - paddle2.position.z) * 0.4; 
@@ -212,7 +286,7 @@ function updatePong3D() {
             bSpeedZ += (bZ - paddle1.position.z) * 0.2; 
         }
     } else if (bX < -20) {
-        p2Score++; resetPongBall3D();
+        triggerGoal(2);
     }
 
     if (bX > 16.5 && bX < 19 && bSpeedX > 0) {
@@ -221,7 +295,7 @@ function updatePong3D() {
             bSpeedZ += (bZ - paddle2.position.z) * 0.2;
         }
     } else if (bX > 20) {
-        p1Score++; resetPongBall3D();
+        triggerGoal(1);
     }
 }
 
@@ -242,6 +316,8 @@ function animate() {
     }
 
     if (pongActive) updatePong3D();
+    
+    updateConfetti();
     
     renderer.render(scene, camera);
 }

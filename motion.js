@@ -43,7 +43,13 @@ function onResults(results) {
         targetHand1Y = applySensitivity(index1.y);
         
         let dist1 = Math.hypot(thumb1.x - index1.x, thumb1.y - index1.y);
-        window.isPinching1 = dist1 < 0.05;
+        
+        // Histerese para evitar tremedeira da pinça
+        if (dist1 < 0.04) {
+            window.isPinching1 = true;
+        } else if (dist1 > 0.07) {
+            window.isPinching1 = false;
+        }
         
         // Ponto super rápido
         canvasCtx.fillStyle = window.isPinching1 ? '#e60012' : '#ffffff';
@@ -53,14 +59,15 @@ function onResults(results) {
 
         if (handsData.length > 1) {
             window.isSecondHandPresent = true;
-            let tip2 = handsData[1].marks[8];
-            targetHand2X = applySensitivity(tip2.x);
-            targetHand2Y = applySensitivity(tip2.y);
+            let thumb2 = handsData[1].marks[4];
+            let index2 = handsData[1].marks[8];
+            targetHand2X = applySensitivity(index2.x);
+            targetHand2Y = applySensitivity(index2.y);
             
             // Ponto Azul
             canvasCtx.fillStyle = '#0070cc';
             canvasCtx.beginPath();
-            canvasCtx.arc(tip2.x * canvasElement.width, tip2.y * canvasElement.height, 4, 0, Math.PI*2);
+            canvasCtx.arc(index2.x * canvasElement.width, index2.y * canvasElement.height, 4, 0, Math.PI*2);
             canvasCtx.fill();
         } else {
             window.isSecondHandPresent = false;
@@ -71,12 +78,13 @@ function onResults(results) {
     }
 }
 
-// LERP (Suavização a 60fps independentes da câmera)
+// LERP (Estabilizador de tremedeira)
 function smoothTracking() {
-    window.hand1X += (targetHand1X - window.hand1X) * 0.4; 
-    window.hand1Y += (targetHand1Y - window.hand1Y) * 0.4;
-    window.hand2X += (targetHand2X - window.hand2X) * 0.4;
-    window.hand2Y += (targetHand2Y - window.hand2Y) * 0.4;
+    // Reduzido para 0.15 para filtrar microtremores da mão perfeitamente
+    window.hand1X += (targetHand1X - window.hand1X) * 0.15; 
+    window.hand1Y += (targetHand1Y - window.hand1Y) * 0.15;
+    window.hand2X += (targetHand2X - window.hand2X) * 0.15;
+    window.hand2Y += (targetHand2Y - window.hand2Y) * 0.15;
     requestAnimationFrame(smoothTracking);
 }
 smoothTracking();
