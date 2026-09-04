@@ -2,9 +2,8 @@
 // LOCALIZATION (i18n)
 // ==========================================
 const translations = {
-const translations = {
     pt: {
-        subtitle: "EDIÇÃO CYBER GREEN",
+        subtitle: "JOGUE USANDO APENAS A CÂMERA",
         enter_system: "JOGAR",
         global_settings: "CONFIGURAÇÕES",
         sys_config_title: "Configurações",
@@ -26,7 +25,7 @@ const translations = {
         game_offline: "JOGO INDISPONÍVEL NO MOMENTO"
     },
     en: {
-        subtitle: "CYBER GREEN EDITION",
+        subtitle: "PLAY USING ONLY YOUR CAMERA",
         enter_system: "PLAY",
         global_settings: "SETTINGS",
         sys_config_title: "Settings",
@@ -48,7 +47,7 @@ const translations = {
         game_offline: "GAME CURRENTLY UNAVAILABLE"
     },
     es: {
-        subtitle: "EDICIÓN CYBER GREEN",
+        subtitle: "JUEGA USANDO SOLO TU CÁMARA",
         enter_system: "JUGAR",
         global_settings: "AJUSTES",
         sys_config_title: "Ajustes",
@@ -70,7 +69,7 @@ const translations = {
         game_offline: "JUEGO NO DISPONIBLE"
     },
     de: {
-        subtitle: "CYBER GREEN EDITION",
+        subtitle: "SPIELEN SIE NUR MIT IHRER KAMERA",
         enter_system: "SPIELEN",
         global_settings: "EINSTELLUNGEN",
         sys_config_title: "Einstellungen",
