@@ -124,7 +124,6 @@ function initPong3D() {
     pongGroup.visible = true;
     particlesMesh.visible = false;
     gridHelper.visible = false;
-    gridHelper2.visible = false;
     
     camera.position.set(0, 18, 28);
     camera.lookAt(0, -2, 0);
@@ -152,7 +151,6 @@ function stopPong3D() {
     pongGroup.visible = false;
     particlesMesh.visible = true;
     gridHelper.visible = true;
-    gridHelper2.visible = true;
     
     document.getElementById('score-board').style.display = 'none';
     document.getElementById('winner-text').style.display = 'none';

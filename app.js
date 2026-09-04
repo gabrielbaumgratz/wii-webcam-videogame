@@ -216,7 +216,7 @@ function updateCursor() {
         let cy = window.hand1Y * cursorCanvas.height;
 
         let elements = document.elementsFromPoint(cx, cy);
-        let foundBtn = elements.find(el => el.classList && el.classList.contains('wii-btn'));
+        let foundBtn = elements.find(el => el.classList && (el.classList.contains('wii-btn') || el.classList.contains('lang-btn')));
 
         let coreRadius = 8;
         let ringRadius = 28;
