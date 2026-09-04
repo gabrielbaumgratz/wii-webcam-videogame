@@ -189,8 +189,8 @@ body {
 }
 
 /* Buttons (Console Style - Pill Shape) */
-.menu-layout { display: flex; flex-direction: column; gap: 20px; align-items: center; }
-.menu-layout.row { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+.menu-layout { display: flex; flex-direction: column; gap: 30px; align-items: center; width: 100%; }
+.menu-layout.row { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 20px; }
 
 .wii-btn {
     color: white;
@@ -209,6 +209,8 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
+    min-width: 280px;
+    box-sizing: border-box;
 }
 
 .wii-btn.btn-primary { 
@@ -216,6 +218,7 @@ body {
     padding: 20px 50px; 
     background: linear-gradient(135deg, rgba(16, 124, 16, 0.9), rgba(16, 124, 16, 0.4)); /* Xbox Green */
     border-color: var(--xbox-green);
+    min-width: 320px;
 }
 
 /* HOVER / DWELL STATE */
@@ -250,30 +253,49 @@ body {
     .screen-title { font-size: 2.5em; margin-bottom: 10px; }
     .subtitle { font-size: 1.2em; margin-bottom: 30px; }
     
-    .wii-btn.btn-primary { font-size: 1.3em; padding: 15px 40px; }
-    .wii-btn { padding: 12px 25px; font-size: 1em; }
+    .wii-btn.btn-primary { font-size: 1.3em; padding: 15px 40px; min-width: 250px; }
+    .wii-btn { padding: 12px 25px; font-size: 1em; min-width: 230px; }
     
     .game-card { width: 220px; height: 160px; }
     
-    /* Encolher a câmera para não atrapalhar a UI */
     #hud-container {
         width: 120px; height: 120px;
         top: 20px; left: 20px;
         border-width: 2px;
     }
     
-    /* Reposicionar botão de voltar */
-    .back-btn { top: 20px; left: 160px; padding: 10px 20px; }
+    .back-btn { top: 20px; left: 160px; padding: 10px 20px; min-width: 100px; }
     
-    /* Encolher menu de idiomas */
     #lang-selector { top: 20px; right: 20px; gap: 10px; }
-    .lang-btn { padding: 5px 10px; font-size: 0.9em; }
+    .lang-btn { padding: 5px 10px; font-size: 0.9em; min-width: 60px; }
+}
+
+@media (max-width: 768px) {
+    .brand-logo { max-width: 280px; }
+    .screen-title { font-size: 2em; text-align: center; }
+    .subtitle { font-size: 1em; text-align: center; margin-bottom: 20px; }
+    
+    .wii-btn { min-width: 90%; font-size: 0.9em; padding: 10px 15px; }
+    .wii-btn.btn-primary { font-size: 1.1em; padding: 12px 20px; min-width: 90%; }
+    
+    .menu-layout { gap: 15px; width: 100%; }
+    .menu-layout.row { flex-direction: column; gap: 15px; }
+    
+    .game-carousel { flex-direction: column; align-items: center; gap: 15px; }
+    .game-card { width: 90%; height: auto; min-height: 100px; }
+    
+    #hud-container { width: 80px; height: 80px; top: 10px; left: 10px; }
+    .back-btn { top: 10px; left: 100px; padding: 8px 15px; font-size: 0.8em; min-width: 100px; }
+    
+    #lang-selector { top: 10px; right: 10px; gap: 5px; flex-wrap: wrap; width: 120px; justify-content: flex-end; }
+    
+    .glass-ui { width: 95% !important; padding: 20px !important; }
 }
 
 @media (max-height: 650px) {
     .screen { padding: 10px; }
     .menu-layout { gap: 10px; }
-    .brand-logo { max-width: 300px; }
+    .brand-logo { max-width: 250px; }
 }
 
 @keyframes popIn {
