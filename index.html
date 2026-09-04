@@ -3,28 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wii Web - Ping Pong</title>
+    <title>Wii Web - Mini Games</title>
     <link rel="stylesheet" href="style.css">
     
-    <!-- Dependências do MediaPipe (Inteligência Artificial para rastrear a mão) -->
+    <!-- Dependências do MediaPipe -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Wii Pong</h1>
-        <p>Mova sua mão na frente da câmera (para cima e para baixo) para controlar a raquete direita (Azul)!</p>
-        <div id="loading">Carregando IA de câmera... Por favor, aguarde e permita o acesso à câmera.</div>
-        
-        <div class="game-area">
-            <canvas id="gameCanvas" width="800" height="400"></canvas>
-            <video id="input_video" width="800" height="400" autoplay playsinline style="display: none;"></video>
-        </div>
+    <!-- HUD da Câmera estilo Kinect -->
+    <div id="hud-container">
+        <video id="input_video" style="display: none;" autoplay playsinline></video>
+        <canvas id="output_canvas" width="240" height="180"></canvas>
+        <div id="loading-hud">Câmera IA...<br>Aguarde</div>
     </div>
 
-    <script src="game.js"></script>
+    <!-- MAIN CONTAINER -->
+    <div id="main-container">
+        
+        <!-- TELA 1: INÍCIO -->
+        <div id="start-screen" class="screen active">
+            <h1>Wii Web 🎮</h1>
+            <p>Aponte com o <b>Dedo Indicador</b> e segure por 1.5s para clicar!</p>
+            <div class="menu-buttons">
+                <button class="wii-btn btn-large" onclick="navTo('select-screen')">▶ JOGAR</button>
+                <button class="wii-btn btn-large" onclick="navTo('settings-screen')">⚙ CONFIGURAÇÕES</button>
+            </div>
+        </div>
+
+        <!-- TELA 2: CONFIGURAÇÕES -->
+        <div id="settings-screen" class="screen">
+            <h1>Configurações</h1>
+            <div class="menu-buttons" style="flex-direction: row; gap: 20px;">
+                <button class="wii-btn" onclick="setDifficulty(1, 5)">Fácil (5 pts)</button>
+                <button class="wii-btn" onclick="setDifficulty(1.5, 10)">Médio (10 pts)</button>
+                <button class="wii-btn" onclick="setDifficulty(2, 15)">Difícil (15 pts)</button>
+            </div>
+            <p id="current-diff-text" style="font-size: 1.5em; color: #00bfff; margin-top: 20px;">
+                Dificuldade Atual: Fácil (5 pts)
+            </p>
+            <br><br>
+            <button class="wii-btn btn-back" onclick="navTo('start-screen')">⬅ Voltar</button>
+        </div>
+
+        <!-- TELA 3: SELEÇÃO DE JOGOS -->
+        <div id="select-screen" class="screen">
+            <h1>Escolha um Jogo</h1>
+            <div class="game-cards">
+                <div class="card wii-btn" onclick="startGame('pong')">
+                    <h2>🏓 Hóquei</h2>
+                    <p>Subir e descer a mão.</p>
+                </div>
+                <div class="card wii-btn" onclick="startGame('tennis')">
+                    <h2>🎾 Tênis 3D</h2>
+                    <p>Regras oficiais de quadra!</p>
+                </div>
+                <div class="card wii-btn" onclick="startGame('moto')">
+                    <h2>🏍️ Moto</h2>
+                    <p>Mova para os lados.</p>
+                </div>
+            </div>
+            <br><br>
+            <button class="wii-btn btn-back" onclick="navTo('start-screen')">⬅ Voltar</button>
+        </div>
+
+        <!-- TELAS DOS JOGOS -->
+        <div id="pong-screen" class="screen">
+            <button class="wii-btn back-btn" onclick="backToMenu()">⬅ Sair do Jogo</button>
+            <canvas id="pongCanvas" width="800" height="400"></canvas>
+        </div>
+
+        <div id="tennis-screen" class="screen">
+            <button class="wii-btn back-btn" onclick="backToMenu()">⬅ Sair do Jogo</button>
+            <canvas id="tennisCanvas" width="800" height="400"></canvas>
+        </div>
+
+        <div id="moto-screen" class="screen">
+            <button class="wii-btn back-btn" onclick="backToMenu()">⬅ Sair do Jogo</button>
+            <canvas id="motoCanvas" width="800" height="400"></canvas>
+        </div>
+
+    </div>
+
+    <!-- CURSOR GLOBAL VIRTUAL -->
+    <canvas id="cursor-canvas"></canvas>
+
     <script src="motion.js"></script>
+    <script src="app.js"></script>
+    <script src="pong.js"></script>
+    <script src="tennis.js"></script>
+    <script src="moto.js"></script>
 </body>
 </html>

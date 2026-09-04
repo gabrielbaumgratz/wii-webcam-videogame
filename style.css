@@ -1,38 +1,157 @@
 body {
-    background-color: #222;
+    background-color: #1a1a2e;
     color: white;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    text-align: center;
     margin: 0;
     padding: 0;
-    display: flex;
+    overflow: hidden; /* Previne rolagem */
+    user-select: none; /* Evita selecionar texto sem querer com o mouse virtual */
+}
+
+/* Cursor Canvas Global (Fica por cima de absolutamente tudo) */
+#cursor-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; /* Importante: deixa o HTML abaixo receber os elementos pela função de colisão no JS */
+    z-index: 9999;
+    background: transparent;
+}
+
+/* HUD estilo Kinect */
+#hud-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 240px;
+    height: 180px;
+    border: 3px solid #00bfff;
+    border-radius: 10px;
+    background-color: #000;
+    z-index: 1000;
+    box-shadow: 0 0 15px rgba(0, 191, 255, 0.5);
+    overflow: hidden;
+}
+
+#output_canvas {
+    width: 100%;
+    height: 100%;
+    transform: scaleX(-1);
+}
+
+#loading-hud {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffaa00;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Sistema de Telas (SPA) */
+.screen {
+    display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
+    position: relative;
+}
+
+.screen.active {
+    display: flex;
 }
 
 h1 {
-    margin-bottom: 5px;
+    font-size: 4em;
     color: #00bfff;
-    text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+    text-shadow: 0 0 15px rgba(0, 191, 255, 0.8);
+    margin-bottom: 5px;
 }
 
-.game-area {
-    position: relative;
-    margin-top: 20px;
+/* Estilos de Botões Wii e Menus */
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 30px;
 }
 
-#gameCanvas {
+.wii-btn {
+    background: #0f3460;
+    color: white;
+    border: 4px solid transparent;
+    padding: 15px 30px;
+    font-size: 1.5em;
+    border-radius: 50px;
+    transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+    text-transform: uppercase;
+    font-weight: bold;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+.wii-btn.btn-large {
+    padding: 20px 60px;
+    font-size: 2em;
+}
+
+.wii-btn.btn-back {
+    background: #e94560;
+    font-size: 1.2em;
+}
+
+/* Estado de Hover (Quando o cursor mágico pousa em cima) */
+.wii-btn.hovering {
+    background: #00bfff;
+    border-color: white;
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(0, 191, 255, 0.6);
+    color: black;
+}
+
+.game-cards {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.card {
+    background: #0f3460;
+    padding: 20px;
+    border-radius: 15px;
+    width: 220px;
+    text-align: center;
+    border: 4px solid transparent;
+}
+
+.card h2 {
+    color: white;
+    font-size: 1.6em;
+    margin-top: 0;
+}
+
+.card.hovering {
+    background: #e94560;
+    border-color: white;
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(233, 69, 96, 0.6);
+}
+
+/* Canvas dos Jogos */
+canvas {
     background-color: #111;
     border: 4px solid #fff;
     border-radius: 10px;
-    box-shadow: 0 0 30px rgba(0, 150, 255, 0.4);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
 }
 
-#loading {
-    color: #ffaa00;
-    font-weight: bold;
-    margin: 10px 0;
-    font-size: 1.1em;
+.back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    z-index: 10;
 }
