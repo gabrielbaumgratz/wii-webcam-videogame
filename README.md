@@ -33,8 +33,8 @@ Como os navegadores bloqueiam o acesso à webcam em arquivos locais (`file:///`)
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/gabrielbaumgratz/wii-webcam-pingpong.git
-   cd wii-webcam-pingpong
+   git clone https://github.com/gabrielbaumgratz/wii-webcam-videogame.git
+   cd wii-webcam-videogame
    ```
 2. Inicie o servidor local (Usando Node.js):
    ```bash
