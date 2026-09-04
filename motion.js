@@ -37,18 +37,27 @@ function onResults(results) {
 
         handsData.sort((a, b) => a.x - b.x);
 
-        targetHand1X = applySensitivity(handsData[0].x);
-        targetHand1Y = applySensitivity(handsData[0].y);
+        let tip1 = handsData[0].marks[8];
+        targetHand1X = applySensitivity(tip1.x);
+        targetHand1Y = applySensitivity(tip1.y);
         
-        // Ponto verde
-        drawLandmarks(canvasCtx, handsData[0].marks, {color: '#AFED91', lineWidth: 1, radius: 3});
+        // Ponto Vermelho super rápido
+        canvasCtx.fillStyle = '#e60012';
+        canvasCtx.beginPath();
+        canvasCtx.arc(tip1.x * canvasElement.width, tip1.y * canvasElement.height, 4, 0, Math.PI*2);
+        canvasCtx.fill();
 
         if (handsData.length > 1) {
             window.isSecondHandPresent = true;
-            targetHand2X = applySensitivity(handsData[1].x);
-            targetHand2Y = applySensitivity(handsData[1].y);
-            // Ponto azul
-            drawLandmarks(canvasCtx, handsData[1].marks, {color: '#486496', lineWidth: 1, radius: 3});
+            let tip2 = handsData[1].marks[8];
+            targetHand2X = applySensitivity(tip2.x);
+            targetHand2Y = applySensitivity(tip2.y);
+            
+            // Ponto Azul
+            canvasCtx.fillStyle = '#0070cc';
+            canvasCtx.beginPath();
+            canvasCtx.arc(tip2.x * canvasElement.width, tip2.y * canvasElement.height, 4, 0, Math.PI*2);
+            canvasCtx.fill();
         } else {
             window.isSecondHandPresent = false;
         }

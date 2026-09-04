@@ -220,9 +220,10 @@ function updateCursor() {
 
         let coreRadius = 8;
         let ringRadius = 28;
-        let accentColor = '#AFED91'; 
+        let accentColor = '#0070cc'; // PS Blue 
 
         if (foundBtn) {
+            accentColor = '#e60012'; // Nintendo Red hover
             if (hoverTarget !== foundBtn) {
                 if(hoverTarget) hoverTarget.classList.remove('hovering');
                 hoverTarget = foundBtn;
@@ -259,7 +260,7 @@ function updateCursor() {
         // Draw Outer Translucent Ring
         cursorCtx.beginPath();
         cursorCtx.arc(cx, cy, ringRadius, 0, Math.PI*2);
-        cursorCtx.fillStyle = 'rgba(55, 178, 77, 0.4)';
+        cursorCtx.fillStyle = hoverTarget ? 'rgba(230, 0, 18, 0.4)' : 'rgba(0, 112, 204, 0.4)';
         cursorCtx.fill();
         cursorCtx.strokeStyle = accentColor;
         cursorCtx.lineWidth = 2;

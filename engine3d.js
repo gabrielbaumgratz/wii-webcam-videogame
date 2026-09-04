@@ -1,32 +1,32 @@
 // ==========================================
-// MOTOR 3D PRINCIPAL (Three.js) - GREEN EDITION
+// MOTOR 3D PRINCIPAL (Three.js) - CONSOLE MIX
 // ==========================================
 const container = document.getElementById('webgl-container');
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x0a2e12, 0.025); // Deep Green Fog
+scene.fog = new THREE.FogExp2(0x0f1115, 0.025); // Deep Console Black/Grey
 
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setClearColor(0x0a2e12, 1); // Fundo verde escuro
+renderer.setClearColor(0x0f1115, 1); // Fundo escuro (PlayStation/Xbox base)
 container.appendChild(renderer.domElement);
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
 scene.add(ambientLight);
 
 // ==========================================
-// AMBIENTE DO MENU (Partículas Cyber Green)
+// AMBIENTE DO MENU (Partículas PS Blue & Grid Xbox)
 // ==========================================
 const particlesGeo = new THREE.BufferGeometry();
-const particlesCount = 400; // Mais partículas
+const particlesCount = 100; // REDUZIDO DRASTICAMENTE PARA MÁXIMA PERFORMANCE
 const posArray = new Float32Array(particlesCount * 3);
 for(let i=0; i < particlesCount*3; i++){
     posArray[i] = (Math.random() - 0.5) * 120;
 }
 particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
 const particlesMat = new THREE.PointsMaterial({
-    size: 0.6,
-    color: 0x37b24d, // Neon Green
+    size: 0.8,
+    color: 0x0070cc, // PlayStation Blue
     transparent: true,
     opacity: 0.9,
     blending: THREE.AdditiveBlending
@@ -34,20 +34,14 @@ const particlesMat = new THREE.PointsMaterial({
 const particlesMesh = new THREE.Points(particlesGeo, particlesMat);
 scene.add(particlesMesh);
 
-// Grade estilo Ciberespaço animada
-const gridHelper = new THREE.GridHelper(300, 80, 0x37b24d, 0x0a2e12);
+// Grade estilo Xbox
+const gridHelper = new THREE.GridHelper(300, 80, 0x107c10, 0x0f1115); // Xbox Green
 gridHelper.position.y = -15;
-gridHelper.material.opacity = 0.4;
+gridHelper.material.opacity = 0.5;
 gridHelper.material.transparent = true;
 scene.add(gridHelper);
 
-// Segundo grid giratório pra dar sensação de profundidade e complexidade
-const gridHelper2 = new THREE.GridHelper(200, 40, 0xAFED91, 0x37b24d);
-gridHelper2.position.set(0, 40, -50);
-gridHelper2.rotation.x = Math.PI / 2;
-gridHelper2.material.opacity = 0.15;
-gridHelper2.material.transparent = true;
-scene.add(gridHelper2);
+// Removido o segundo grid giratório para salvar processamento de GPU.
 
 // ==========================================
 // AMBIENTE DO PONG 3D (STANDARD COLORS)
@@ -224,12 +218,11 @@ function animate() {
     requestAnimationFrame(animate);
     
     if (particlesMesh.visible) {
-        particlesMesh.rotation.y += 0.002; // Um pouco mais rápido
-        particlesMesh.rotation.x += 0.001;
+        particlesMesh.rotation.y += 0.001; 
+        particlesMesh.rotation.x += 0.0005;
         
         // Mover as grids para efeito de velocidade
         gridHelper.position.z = (gridHelper.position.z + 0.1) % 10;
-        gridHelper2.rotation.z += 0.001;
     }
 
     if (pongActive) updatePong3D();

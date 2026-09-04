@@ -1,12 +1,14 @@
 :root {
-    --deep-green: #0a2e12;
-    --neon-green: #37b24d;
-    --accent-light: #AFED91;
+    /* CONSOLE MIX THEME */
+    --bg-dark: #0f1115;      /* Base Escura (PS/Xbox) */
+    --ps-blue: #0070cc;      /* Azul PlayStation */
+    --xbox-green: #107c10;   /* Verde Xbox */
+    --nin-red: #e60012;      /* Vermelho Nintendo */
     --text-primary: #FFFFFF;
 }
 
 body {
-    background-color: var(--deep-green);
+    background-color: var(--bg-dark);
     color: var(--text-primary);
     font-family: 'Outfit', sans-serif;
     margin: 0;
@@ -23,31 +25,13 @@ body {
     z-index: -1;
 }
 
-/* Highly Animated Complex UI Glass */
+/* UI Glass OTIMIZADA PARA PERFORMANCE EXTREMA */
+/* Removemos backdrop-filter e animações CSS pesadas (scanline) para zerar o lag */
 .glass-ui {
-    background: linear-gradient(135deg, rgba(10, 46, 18, 0.7), rgba(55, 178, 77, 0.2));
-    border: 2px solid rgba(175, 237, 145, 0.3);
-    border-radius: 16px;
-    box-shadow: 0 0 30px rgba(55, 178, 77, 0.2), inset 0 0 20px rgba(175, 237, 145, 0.1);
-    position: relative;
-    overflow: hidden;
-}
-
-/* Moving scanline effect for complexity */
-.glass-ui::after {
-    content: '';
-    position: absolute;
-    top: -50%; left: -50%;
-    width: 200%; height: 200%;
-    background: linear-gradient(rgba(255,255,255,0), rgba(175, 237, 145, 0.1), rgba(255,255,255,0));
-    transform: rotate(30deg);
-    animation: scanline 4s linear infinite;
-    pointer-events: none;
-}
-
-@keyframes scanline {
-    0% { transform: rotate(30deg) translateY(-100%); }
-    100% { transform: rotate(30deg) translateY(100%); }
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 /* Language Selector */
@@ -57,21 +41,28 @@ body {
     z-index: 1000;
     display: flex;
     gap: 15px;
+    padding: 10px;
 }
 
 .lang-btn {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    font-size: 2em;
+    font-size: 1.5em;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    animation: floatBtn 4s infinite ease-in-out;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid transparent;
+    transition: all 0.2s;
 }
 
-.lang-btn:nth-child(even) { animation-delay: 0.5s; }
+.lang-btn.selected {
+    border-color: var(--ps-blue);
+    background: rgba(0, 112, 204, 0.3);
+}
 
 /* Cursor Canvas */
 #cursor-canvas {
@@ -86,10 +77,10 @@ body {
 #hud-container {
     position: fixed;
     top: 30px; left: 30px;
-    width: 200px; height: 200px;
+    width: 180px; height: 180px;
     border-radius: 50%;
-    border: 4px solid var(--neon-green);
-    box-shadow: 0 0 15px rgba(55, 178, 77, 0.5);
+    border: 3px solid var(--text-primary); /* Moldura simples e elegante */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
     z-index: 1000;
     overflow: hidden;
     background: #000;
@@ -99,7 +90,7 @@ body {
     position: absolute;
     width: 100%; height: 100%;
     transform: scaleX(-1);
-    opacity: 0.85;
+    opacity: 0.9;
     object-fit: cover;
 }
 
@@ -114,11 +105,9 @@ body {
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    color: var(--accent-light);
+    color: var(--ps-blue);
     font-size: 1em;
     font-weight: bold;
-    text-shadow: 0 0 10px var(--neon-green);
-    animation: pulse 1s infinite alternate;
 }
 
 /* Screens */
@@ -132,12 +121,7 @@ body {
     padding: 40px;
     box-sizing: border-box;
 }
-.screen.active { display: flex; animation: zoomIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
-
-@keyframes zoomIn {
-    0% { opacity: 0; transform: scale(0.9); }
-    100% { opacity: 1; transform: scale(1); }
-}
+.screen.active { display: flex; } /* Removido keyframe de zoomIn para economizar GPU */
 
 /* Typography */
 .brand-title {
@@ -145,7 +129,7 @@ body {
     font-weight: 800;
     margin: 0;
     text-transform: uppercase;
-    text-shadow: 0 0 20px var(--neon-green);
+    text-shadow: 0 0 10px rgba(255,255,255,0.5);
     letter-spacing: 5px;
 }
 
@@ -153,19 +137,18 @@ body {
     font-size: 3.5em;
     font-weight: 800;
     margin-bottom: 20px;
-    text-shadow: 0 0 15px var(--neon-green);
 }
 
 .subtitle {
     font-size: 1.5em;
-    color: var(--accent-light);
+    color: var(--ps-blue);
     letter-spacing: 6px;
     margin-bottom: 50px;
     text-transform: uppercase;
 }
 
-/* Buttons with continuous animation */
-.menu-layout { display: flex; flex-direction: column; gap: 25px; align-items: center; }
+/* Buttons (Console Style) */
+.menu-layout { display: flex; flex-direction: column; gap: 20px; align-items: center; }
 .menu-layout.row { flex-direction: row; flex-wrap: wrap; justify-content: center; }
 
 .wii-btn {
@@ -175,46 +158,39 @@ body {
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 2px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    outline: none;
-    animation: floatBtn 3s infinite ease-in-out;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px; /* Clean console rounded rect */
+    transition: all 0.1s; /* Rápido, sem delay */
 }
 
-.wii-btn:nth-child(even) { animation-delay: 0.5s; }
-
-@keyframes floatBtn {
-    0%, 100% { transform: translateY(0); box-shadow: 0 5px 15px rgba(55, 178, 77, 0.3); }
-    50% { transform: translateY(-5px); box-shadow: 0 15px 25px rgba(175, 237, 145, 0.5); }
+.wii-btn.btn-primary { 
+    font-size: 1.6em; 
+    padding: 25px 60px; 
+    background: rgba(16, 124, 16, 0.8); /* Xbox Green */
+    border-color: var(--xbox-green);
 }
-
-.wii-btn.btn-primary { font-size: 1.6em; padding: 25px 60px; border-width: 3px; }
 
 /* HOVER / DWELL STATE */
 .wii-btn.hovering {
-    animation: none; /* Stop floating when hovering */
-    transform: scale(1.1);
-    background: rgba(175, 237, 145, 0.4);
-    border-color: var(--accent-light);
-    color: #fff;
-    box-shadow: 0 0 40px var(--neon-green), inset 0 0 20px var(--accent-light);
+    background: var(--nin-red); /* Nintendo Red Hover */
+    border-color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(230, 0, 18, 0.6);
 }
 
 .wii-btn.selected {
-    background: var(--neon-green);
-    color: black;
-    border-color: var(--accent-light);
-    box-shadow: 0 0 30px var(--accent-light);
+    background: var(--ps-blue); /* PlayStation Blue Selected */
+    border-color: #fff;
 }
 
 /* Game Carousel */
-.game-carousel { display: flex; gap: 40px; }
+.game-carousel { display: flex; gap: 30px; }
 .game-card { 
-    width: 300px; height: 220px; 
+    width: 280px; height: 200px; 
     padding: 20px; text-align: center; 
     display: flex; flex-direction: column; 
     justify-content: center;
-    border-width: 3px;
 }
 
-.back-btn { position: absolute; top: 30px; left: 40px; z-index: 10; animation: none; }
+.back-btn { position: absolute; top: 30px; left: 240px; z-index: 10; }
