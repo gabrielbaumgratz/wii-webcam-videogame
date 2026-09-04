@@ -55,7 +55,7 @@ Os navegadores modernos bloqueiam o acesso à câmera ao abrir arquivos HTML dir
 
 ## Tecnologias Utilizadas
 
-O projeto foi desenvolvido para rodar de forma leve e responsiva direto no navegador (client-side), com interface baseada na estética *Y2K Futurism* e *Liquid Glass*.
+O projeto foi desenvolvido para rodar de forma leve e responsiva direto no navegador (client-side).
 
 - **Frontend:** HTML5, CSS3 e JavaScript puro (Vanilla JS).
 - **Inteligência Artificial:** O rastreamento de movimento utiliza a biblioteca de visão computacional **MediaPipe** (do Google). 
