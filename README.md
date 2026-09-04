@@ -9,7 +9,11 @@
     <img src="https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white" alt="Instagram" />
   </a>
 </div>
-<br>
+
+<div align="center">
+  <img src="logo.png" alt="Wii Web Minigames Logo" width="400">
+</div>
+
 <div align="center">
   <strong>🇧🇷 Português</strong> | 
   <a href="README_EN.md">🇺🇸 English</a> | 

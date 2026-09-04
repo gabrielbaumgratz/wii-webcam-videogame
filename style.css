@@ -131,14 +131,18 @@ body {
 }
 .screen.active { display: flex; } /* Removido keyframe de zoomIn para economizar GPU */
 
-/* Typography */
-.brand-title {
-    font-size: 6em;
-    font-weight: 800;
-    margin: 0;
-    text-transform: uppercase;
-    text-shadow: 0 0 10px rgba(255,255,255,0.5);
-    letter-spacing: 5px;
+/* Typography & Logo */
+.brand-logo {
+    max-width: 500px;
+    width: 90%;
+    margin-bottom: 5px;
+    filter: drop-shadow(0 0 25px rgba(0, 112, 204, 0.4));
+    animation: floatLogo 6s infinite ease-in-out;
+}
+
+@keyframes floatLogo {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
 }
 
 .screen-title {
@@ -209,7 +213,7 @@ body {
 /* RESPONSIVIDADE (Telas menores e Laptops)   */
 /* ========================================== */
 @media (max-width: 1400px), (max-height: 800px) {
-    .brand-title { font-size: 4em; }
+    .brand-logo { max-width: 400px; }
     .screen-title { font-size: 2.5em; margin-bottom: 10px; }
     .subtitle { font-size: 1.2em; margin-bottom: 30px; }
     
@@ -230,11 +234,11 @@ body {
     
     /* Encolher menu de idiomas */
     #lang-selector { top: 20px; right: 20px; gap: 10px; }
-    .lang-btn { width: 40px; height: 40px; }
+    .lang-btn { padding: 5px 10px; font-size: 0.9em; }
 }
 
 @media (max-height: 650px) {
     .screen { padding: 10px; }
     .menu-layout { gap: 10px; }
-    .brand-title { font-size: 3em; }
+    .brand-logo { max-width: 300px; }
 }
