@@ -331,10 +331,10 @@ net.position.set(0, -4, 0);
 tLines.add(net);
 tennisGroup.add(tLines);
 
-// Textura da Raquete (Asset PNG)
+// Textura da Raquete (Asset PNG do Usuário)
 const textureLoader = new THREE.TextureLoader();
-const racketTex = textureLoader.load('assets/racket.jpg');
-const rMat = new THREE.MeshBasicMaterial({ map: racketTex, transparent: true, blending: THREE.AdditiveBlending, side: THREE.DoubleSide });
+const racketTex = textureLoader.load('assets/user_racket.png');
+const rMat = new THREE.MeshBasicMaterial({ map: racketTex, transparent: true, side: THREE.DoubleSide });
 const p1Racket = new THREE.Mesh(new THREE.PlaneGeometry(6, 6), rMat);
 p1Racket.position.set(0, 0, 20); // Jogador perto da câmera
 tennisGroup.add(p1Racket);
@@ -342,6 +342,22 @@ tennisGroup.add(p1Racket);
 const p2Racket = new THREE.Mesh(new THREE.PlaneGeometry(6, 6), rMat);
 p2Racket.position.set(0, 0, -20); // Inimigo no fundo
 tennisGroup.add(p2Racket);
+
+// Plateia (Audience)
+const audienceGroup = new THREE.Group();
+const audGeo = new THREE.BoxGeometry(0.8, 1.5, 0.8);
+const colors = [0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0xff00ff, 0x00ffff, 0xffffff];
+for(let i = -20; i <= 20; i += 2) {
+    // Esquerda
+    let aud1 = new THREE.Mesh(audGeo, new THREE.MeshStandardMaterial({ color: colors[Math.floor(Math.random() * colors.length)] }));
+    aud1.position.set(-18, -3 + Math.random(), i + (Math.random() - 0.5));
+    audienceGroup.add(aud1);
+    // Direita
+    let aud2 = new THREE.Mesh(audGeo, new THREE.MeshStandardMaterial({ color: colors[Math.floor(Math.random() * colors.length)] }));
+    aud2.position.set(18, -3 + Math.random(), i + (Math.random() - 0.5));
+    audienceGroup.add(aud2);
+}
+tennisGroup.add(audienceGroup);
 
 // Bola (Asset PNG)
 const ballTex = textureLoader.load('assets/ball.jpg');
@@ -401,9 +417,15 @@ function resetTennisBall(scorer) {
 function updateTennis3D() {
     if(!tennisActive || tennisShowingWin || isGoalPause || window.isPaused) return;
 
-    // Jogador 1 (Controlado pela mão)
-    let targetX = (window.hand1X - 0.5) * 30;
-    let targetY = (1 - window.hand1Y) * 15 - 5; 
+    // Plateia pulando (Animação)
+    audienceGroup.children.forEach(c => {
+        if (Math.random() > 0.95) c.position.y = -3 + Math.random() * 2;
+        else if (c.position.y > -3) c.position.y -= 0.1;
+    });
+
+    // Jogador 1 (Controlado pela mão - Movimentação Invertida Corrigida)
+    let targetX = -(window.hand1X - 0.5) * 30; // Inverteu o X
+    let targetY = -(window.hand1Y - 0.5) * 15 - 3; // Inverteu o Y
     p1Racket.position.x += (targetX - p1Racket.position.x) * 0.3;
     p1Racket.position.y += (targetY - p1Racket.position.y) * 0.3;
 
