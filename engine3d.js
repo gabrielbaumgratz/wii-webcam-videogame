@@ -11,8 +11,16 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x0f1115, 1); // Fundo escuro (PlayStation/Xbox base)
 container.appendChild(renderer.domElement);
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+// Setup de Iluminação Global Básica
+const ambientLight = new THREE.AmbientLight(0xffffff, 1.2); // Muito mais claro
 scene.add(ambientLight);
+
+const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+dirLight.position.set(10, 20, 10);
+scene.add(dirLight);
+
+const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
+scene.add(hemiLight);
 
 // ==========================================
 // AMBIENTE DO MENU (Partículas PS Blue & Grid Xbox)
@@ -619,12 +627,13 @@ function stopMoto3D() {
 function updateMoto3D() {
     if(!motoActive || motoShowingWin || window.isPaused) return;
 
-    // Alvo do usuário
-    let targetX = (window.hand1X - 0.5) * 30;
-    
-    // Detecção de Largada: Se a mão do usuário se mover para o centro, a corrida inicia!
+    // Jogador (Controlado pela mão com altíssima sensibilidade)
+    let targetX = -(window.hand1X - 0.5) * 60 * window.sensitivity; // Aplica sensibilidade global
+    // Limita a moto na pista para não sair voando
+    targetX = Math.max(-25, Math.min(25, targetX));
+
     if (!motoStarted) {
-        if (Math.abs(targetX - playerMoto.position.x) > 5.0) {
+        if (Math.abs(targetX) > 5.0) {
             motoStarted = true; 
         } else {
             return; // Permanece no canto/centro parada até largada!
