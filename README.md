@@ -1,4 +1,4 @@
-# Wii Web - Mini Games 🏓🎾🏍️
+# Wii Web - Mini Games
 
 Bem-vindo ao **Wii Web Hub**, um experimento de jogos de navegador que traz a experiência mágica do Nintendo Wii e do Xbox Kinect direto para o seu computador, usando apenas a sua webcam! 
 
@@ -6,16 +6,7 @@ Nenhum controle extra é necessário. **O seu dedo é o mouse e a sua mão é a 
 
 ---
 
-## 🔒 Privacidade e Segurança (Não estamos te espionando!)
-Entendemos que dar permissão de câmera para o navegador pode ser desconfortável. Por isso, queremos deixar nossa arquitetura totalmente transparente:
-
-- **100% Local (Client-Side):** Absolutamente nenhuma imagem, vídeo ou dado pessoal sai do seu computador.
-- **Sem Servidores de Nuvem:** Toda a Inteligência Artificial e a leitura dos movimentos rodam localmente dentro da memória do seu próprio navegador (via WebAssembly). 
-- Ninguém está te observando. O uso da câmera é temporário e estritamente restrito à aba do jogo para calcular a posição geométrica da sua mão. Se não se sentir confortável, o projeto no futuro suportará o uso do seu Smartphone como controle!
-
----
-
-## 🌟 Como Funciona a Magia?
+## Como Funciona a Magia?
 
 O projeto utiliza a biblioteca **MediaPipe** (do Google) para realizar Inteligência Artificial de visão computacional diretamente no seu navegador.
 
@@ -27,7 +18,7 @@ O projeto utiliza a biblioteca **MediaPipe** (do Google) para realizar Inteligê
    - **Moto Racer:** Desloque a mão para os lados para desviar dos obstáculos em uma estrada.
    - **Hóquei:** Defenda seu lado movendo a mão para cima e para baixo.
 
-## 🚀 Como Rodar na sua Máquina
+## Como Rodar na sua Máquina
 
 Como os navegadores bloqueiam o acesso à webcam em arquivos locais (`file:///`), você precisa rodar o jogo através de um servidor local simples. 
 
@@ -43,11 +34,24 @@ Como os navegadores bloqueiam o acesso à webcam em arquivos locais (`file:///`)
 3. Abra o navegador e acesse: `http://localhost:8000`
 4. Permita o uso da câmera e divirta-se!
 
-## 🎮 O Futuro do Projeto (Próximos Passos)
-Este projeto está em constante evolução. Nossas próximas grandes atualizações incluem:
-- 📱 **O Smartphone como Controle:** Integração via Python e WebSockets para usar o acelerômetro do seu celular como um verdadeiro "Wii Remote".
-- 👥 **Multiplayer Local (Tela Dividida):** Suporte para dois jogadores jogarem no mesmo computador, dividindo a tela.
-- ⛳ **Golfe:** Novo jogo para praticar o swing de golfe.
+---
+
+## Privacidade e Segurança (Não estamos te espionando!)
+
+Entendemos que dar permissão de câmera para o navegador pode ser desconfortável. Por isso, queremos deixar nossa arquitetura totalmente transparente:
+
+- **100% Local (Client-Side):** Absolutamente nenhuma imagem, vídeo ou dado pessoal sai do seu computador.
+- **Sem Servidores de Nuvem:** Toda a Inteligência Artificial e a leitura dos movimentos rodam localmente dentro da memória do seu próprio navegador (via WebAssembly). 
+- Ninguém está te observando. O uso da câmera é temporário e estritamente restrito à aba do jogo para calcular a posição geométrica da sua mão. Se não se sentir confortável, o projeto no futuro suportará o uso do seu Smartphone como controle!
 
 ---
-Feito com 💙, JavaScript puro e IA de ponta. Divirta-se!
+
+## O Futuro do Projeto (Próximos Passos)
+
+Este projeto está em constante evolução. Nossas próximas grandes atualizações incluem:
+- **O Smartphone como Controle:** Integração via Python e WebSockets para usar o acelerômetro do seu celular como um verdadeiro "Wii Remote".
+- **Multiplayer Local (Tela Dividida):** Suporte para dois jogadores jogarem no mesmo computador, dividindo a tela.
+- **Golfe:** Novo jogo para praticar o swing de golfe.
+
+---
+Feito com JavaScript puro e IA de ponta. Divirta-se!
