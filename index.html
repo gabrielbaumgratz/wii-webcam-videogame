@@ -27,90 +27,98 @@
     <!-- VIRTUAL CURSOR LAYER -->
     <canvas id="cursor-canvas"></canvas>
 
+    <!-- LANGUAGE SELECTOR -->
+    <div id="lang-selector" class="glass-ui">
+        <button class="wii-btn lang-btn selected" onclick="setLang('pt')">PT</button>
+        <button class="wii-btn lang-btn" onclick="setLang('en')">EN</button>
+        <button class="wii-btn lang-btn" onclick="setLang('es')">ES</button>
+        <button class="wii-btn lang-btn" onclick="setLang('de')">DE</button>
+    </div>
+
     <!-- MAIN APP CONTAINER -->
     <div id="main-container">
         
         <!-- START SCREEN -->
         <div id="start-screen" class="screen active">
             <h1 class="brand-title">WII WEB</h1>
-            <p class="subtitle">CYBER GREEN EDITION</p>
+            <p class="subtitle" data-i18n="subtitle">CYBER GREEN EDITION</p>
             
             <div class="menu-layout">
-                <button class="wii-btn btn-primary glass-ui" onclick="navTo('select-screen')">ENTER SYSTEM</button>
-                <button class="wii-btn btn-secondary glass-ui" onclick="navTo('system-settings-screen')">GLOBAL SETTINGS</button>
+                <button class="wii-btn btn-primary glass-ui" onclick="navTo('select-screen')" data-i18n="enter_system">ENTRAR NO SISTEMA</button>
+                <button class="wii-btn btn-secondary glass-ui" onclick="navTo('system-settings-screen')" data-i18n="global_settings">CONFIG. GLOBAIS</button>
             </div>
         </div>
 
         <!-- GLOBAL SYSTEM SETTINGS -->
         <div id="system-settings-screen" class="screen">
-            <h1 class="screen-title">System Configuration</h1>
+            <h1 class="screen-title" data-i18n="sys_config_title">Configuração do Sistema</h1>
             
             <div class="glass-ui" style="padding: 40px; text-align: center; width: 80%;">
-                <h2>Camera Sensitivity</h2>
-                <p>Adjust how much your physical hand moves the cursor.</p>
+                <h2 data-i18n="cam_sens_title">Sensibilidade da Câmera</h2>
+                <p data-i18n="cam_sens_desc">Ajusta o quanto sua mão real move o cursor.</p>
                 <div class="menu-layout row" id="sensitivity-options">
-                    <button class="wii-btn glass-ui" onclick="setSensitivity(0.8, this)">Low</button>
-                    <button class="wii-btn glass-ui selected" onclick="setSensitivity(1.2, this)">Balanced</button>
-                    <button class="wii-btn glass-ui" onclick="setSensitivity(1.8, this)">High</button>
+                    <button class="wii-btn glass-ui" onclick="setSensitivity(0.8, this)" data-i18n="sens_low">Baixa</button>
+                    <button class="wii-btn glass-ui selected" onclick="setSensitivity(1.2, this)" data-i18n="sens_balanced">Normal</button>
+                    <button class="wii-btn glass-ui" onclick="setSensitivity(1.8, this)" data-i18n="sens_high">Alta</button>
                 </div>
             </div>
             <br>
-            <button class="wii-btn btn-back glass-ui" onclick="navTo('start-screen')">BACK</button>
+            <button class="wii-btn btn-back glass-ui" onclick="navTo('start-screen')" data-i18n="btn_back">VOLTAR</button>
         </div>
 
         <!-- GAME LIBRARY SCREEN -->
         <div id="select-screen" class="screen">
-            <h1 class="screen-title">Select Module</h1>
+            <h1 class="screen-title" data-i18n="select_module">Selecionar Módulo</h1>
             
             <div class="game-carousel">
                 <div class="game-card wii-btn glass-ui" onclick="openGameHub('pong')">
                     <h2>AIR HOCKEY 3D</h2>
-                    <p>Enter the Grid.</p>
+                    <p data-i18n="hockey_desc">Entre no Grid.</p>
                 </div>
                 
                 <div class="game-card wii-btn glass-ui" onclick="openGameHub('tennis')">
-                    <h2>COURT TENNIS</h2>
-                    <p>Coming Soon</p>
+                    <h2 data-i18n="tennis_title">TÊNIS DE QUADRA</h2>
+                    <p data-i18n="coming_soon">Em Breve</p>
                 </div>
                 
                 <div class="game-card wii-btn glass-ui" onclick="openGameHub('moto')">
                     <h2>MOTO RACER</h2>
-                    <p>Coming Soon</p>
+                    <p data-i18n="coming_soon">Em Breve</p>
                 </div>
             </div>
             
-            <button class="wii-btn btn-back glass-ui" style="margin-top: 50px;" onclick="navTo('start-screen')">BACK</button>
+            <button class="wii-btn btn-back glass-ui" style="margin-top: 50px;" onclick="navTo('start-screen')" data-i18n="btn_back">VOLTAR</button>
         </div>
 
-        <!-- PER-GAME HUB (Settings specific to the selected game) -->
+        <!-- PER-GAME HUB -->
         <div id="game-hub-screen" class="screen">
             <h1 class="screen-title" id="game-hub-title">GAME CONFIG</h1>
             
             <div class="glass-ui" style="padding: 40px; text-align: center; width: 80%; margin-bottom: 20px;">
-                <h2>Players</h2>
+                <h2 data-i18n="players_title">Jogadores</h2>
                 <div class="menu-layout row" id="player-options">
-                    <button class="wii-btn glass-ui selected" onclick="setGameMode(1, this)">1 Player (Vs System)</button>
-                    <button class="wii-btn glass-ui" onclick="setGameMode(2, this)">2 Players (Split-Screen)</button>
+                    <button class="wii-btn glass-ui selected" onclick="setGameMode(1, this)" data-i18n="mode_1p">1 Jogador (Vs Máquina)</button>
+                    <button class="wii-btn glass-ui" onclick="setGameMode(2, this)" data-i18n="mode_2p">2 Jogadores (Tela Dividida)</button>
                 </div>
             </div>
 
             <div class="glass-ui" style="padding: 40px; text-align: center; width: 80%; margin-bottom: 40px;">
-                <h2>Difficulty Level</h2>
+                <h2 data-i18n="diff_title">Nível de Dificuldade</h2>
                 <div class="menu-layout row" id="difficulty-options">
-                    <button class="wii-btn glass-ui selected" onclick="setGameDifficulty(1, 5, this)">Fácil (5pts)</button>
-                    <button class="wii-btn glass-ui" onclick="setGameDifficulty(1.5, 10, this)">Médio (10pts)</button>
-                    <button class="wii-btn glass-ui" onclick="setGameDifficulty(2, 15, this)">Difícil (15pts)</button>
-                    <button class="wii-btn glass-ui" onclick="setGameDifficulty(3, 20, this)" style="color: #ff3366; border-color: #ff3366;">EXTREMO (20pts)</button>
+                    <button class="wii-btn glass-ui selected" onclick="setGameDifficulty(1, 5, this)" data-i18n="diff_easy">Fácil (5pts)</button>
+                    <button class="wii-btn glass-ui" onclick="setGameDifficulty(1.5, 10, this)" data-i18n="diff_med">Médio (10pts)</button>
+                    <button class="wii-btn glass-ui" onclick="setGameDifficulty(2, 15, this)" data-i18n="diff_hard">Difícil (15pts)</button>
+                    <button class="wii-btn glass-ui" onclick="setGameDifficulty(3, 20, this)" style="color: #ff3366; border-color: #ff3366;" data-i18n="diff_ext">EXTREMO (20pts)</button>
                 </div>
             </div>
 
-            <button class="wii-btn btn-primary glass-ui" onclick="launchGame()">LAUNCH PROTOCOL</button>
-            <button class="wii-btn btn-back glass-ui" onclick="navTo('select-screen')">BACK</button>
+            <button class="wii-btn btn-primary glass-ui" onclick="launchGame()" data-i18n="btn_launch">INICIAR PROTOCOLO</button>
+            <button class="wii-btn btn-back glass-ui" onclick="navTo('select-screen')" data-i18n="btn_back">VOLTAR</button>
         </div>
 
         <!-- IN-GAME HUD -->
         <div id="game-ui-screen" class="screen">
-            <button class="wii-btn back-btn glass-ui" onclick="backToMenu()">ABORT PROTOCOL</button>
+            <button class="wii-btn back-btn glass-ui" onclick="backToMenu()" data-i18n="btn_abort">ABORTER PROTOCOLO</button>
             <div id="score-board" style="display: none; width: 100%; justify-content: space-between; position: absolute; top: 50px; padding: 0 100px; box-sizing: border-box; font-size: 6em; font-weight: 800; pointer-events: none; text-shadow: 0 0 20px #37b24d;">
                 <span id="p1-score-txt" style="color: #AFED91;">0</span>
                 <span id="p2-score-txt" style="color: #FFFFFF;">0</span>

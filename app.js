@@ -1,4 +1,127 @@
+// ==========================================
+// LOCALIZATION (i18n)
+// ==========================================
+const translations = {
+    pt: {
+        subtitle: "EDIÇÃO CYBER GREEN",
+        enter_system: "ENTRAR NO SISTEMA",
+        global_settings: "CONFIG. GLOBAIS",
+        sys_config_title: "Configuração do Sistema",
+        cam_sens_title: "Sensibilidade da Câmera",
+        cam_sens_desc: "Ajusta o quanto sua mão real move o cursor.",
+        sens_low: "Baixa", sens_balanced: "Normal", sens_high: "Alta",
+        btn_back: "VOLTAR",
+        select_module: "Selecionar Módulo",
+        hockey_desc: "Entre no Grid.",
+        tennis_title: "TÊNIS DE QUADRA",
+        coming_soon: "Em Breve",
+        players_title: "Jogadores",
+        mode_1p: "1 Jogador (Vs Máquina)",
+        mode_2p: "2 Jogadores (Tela Dividida)",
+        diff_title: "Nível de Dificuldade",
+        diff_easy: "Fácil (5pts)", diff_med: "Médio (10pts)", diff_hard: "Difícil (15pts)", diff_ext: "EXTREMO (20pts)",
+        btn_launch: "INICIAR PROTOCOLO",
+        btn_abort: "ABORTAR PROTOCOLO",
+        game_offline: "SISTEMA OFFLINE PARA ATUALIZAÇÕES"
+    },
+    en: {
+        subtitle: "CYBER GREEN EDITION",
+        enter_system: "ENTER SYSTEM",
+        global_settings: "GLOBAL SETTINGS",
+        sys_config_title: "System Configuration",
+        cam_sens_title: "Camera Sensitivity",
+        cam_sens_desc: "Adjusts how much your physical hand moves the cursor.",
+        sens_low: "Low", sens_balanced: "Balanced", sens_high: "High",
+        btn_back: "BACK",
+        select_module: "Select Module",
+        hockey_desc: "Enter the Grid.",
+        tennis_title: "COURT TENNIS",
+        coming_soon: "Coming Soon",
+        players_title: "Players",
+        mode_1p: "1 Player (Vs System)",
+        mode_2p: "2 Players (Split-Screen)",
+        diff_title: "Difficulty Level",
+        diff_easy: "Easy (5pts)", diff_med: "Medium (10pts)", diff_hard: "Hard (15pts)", diff_ext: "EXTREME (20pts)",
+        btn_launch: "LAUNCH PROTOCOL",
+        btn_abort: "ABORT PROTOCOL",
+        game_offline: "SYSTEM OFFLINE FOR UPGRADES"
+    },
+    es: {
+        subtitle: "EDICIÓN CYBER GREEN",
+        enter_system: "ENTRAR AL SISTEMA",
+        global_settings: "AJUSTES GLOBALES",
+        sys_config_title: "Configuración del Sistema",
+        cam_sens_title: "Sensibilidad de Cámara",
+        cam_sens_desc: "Ajusta cuánto mueve el cursor tu mano física.",
+        sens_low: "Baja", sens_balanced: "Normal", sens_high: "Alta",
+        btn_back: "VOLVER",
+        select_module: "Seleccionar Módulo",
+        hockey_desc: "Entra a la Red.",
+        tennis_title: "TENIS DE CANCHA",
+        coming_soon: "Próximamente",
+        players_title: "Jugadores",
+        mode_1p: "1 Jugador (Vs Máquina)",
+        mode_2p: "2 Jugadores (Pantalla Dividida)",
+        diff_title: "Nivel de Dificultad",
+        diff_easy: "Fácil (5pts)", diff_med: "Medio (10pts)", diff_hard: "Difícil (15pts)", diff_ext: "EXTREMO (20pts)",
+        btn_launch: "INICIAR PROTOCOLO",
+        btn_abort: "ABORTAR PROTOCOLO",
+        game_offline: "SISTEMA DESCONECTADO PARA MEJORAS"
+    },
+    de: {
+        subtitle: "CYBER GREEN EDITION",
+        enter_system: "SYSTEM STARTEN",
+        global_settings: "GLOBALE EINSTELLUNGEN",
+        sys_config_title: "Systemkonfiguration",
+        cam_sens_title: "Kamera-Empfindlichkeit",
+        cam_sens_desc: "Passt an, wie stark deine Hand den Cursor bewegt.",
+        sens_low: "Niedrig", sens_balanced: "Normal", sens_high: "Hoch",
+        btn_back: "ZURÜCK",
+        select_module: "Modul Auswählen",
+        hockey_desc: "Betritt das Grid.",
+        tennis_title: "PLATZTENNIS",
+        coming_soon: "Demnächst",
+        players_title: "Spieler",
+        mode_1p: "1 Spieler (Vs System)",
+        mode_2p: "2 Spieler (Splitscreen)",
+        diff_title: "Schwierigkeitsgrad",
+        diff_easy: "Einfach (5 Pkt)", diff_med: "Mittel (10 Pkt)", diff_hard: "Schwer (15 Pkt)", diff_ext: "EXTREM (20 Pkt)",
+        btn_launch: "PROTOKOLL STARTEN",
+        btn_abort: "PROTOKOLL ABBRECHEN",
+        game_offline: "SYSTEM OFFLINE FÜR UPDATES"
+    }
+};
+
+window.currentLang = 'pt';
+
+function setLang(lang) {
+    window.currentLang = lang;
+    const dict = translations[lang];
+    
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) {
+            el.innerText = dict[key];
+        }
+    });
+
+    // Update selected visual state for lang buttons
+    const parent = document.getElementById('lang-selector');
+    if(parent) {
+        parent.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('selected'));
+        // Find the button that called this
+        let btns = parent.querySelectorAll('.lang-btn');
+        for(let b of btns) {
+            if(b.innerText.toLowerCase() === lang.toLowerCase()) {
+                b.classList.add('selected');
+            }
+        }
+    }
+}
+
+// ==========================================
 // GLOBAL SETTINGS
+// ==========================================
 window.sensitivity = 1.2;
 
 // PER-GAME SETTINGS
@@ -60,7 +183,7 @@ function launchGame() {
         initPong3D();
     } else {
         document.getElementById('winner-text').style.display = 'block';
-        document.getElementById('winner-text').innerText = "SYSTEM OFFLINE FOR UPGRADES";
+        document.getElementById('winner-text').innerText = translations[window.currentLang].game_offline;
     }
 }
 
