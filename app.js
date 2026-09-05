@@ -188,6 +188,22 @@ let pendingGame = 'pong';
 function navTo(screenId) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(screenId).classList.add('active');
+
+    // Controlar Animações de Fundo (só mostra no menu principal)
+    let floaters = document.getElementById('bg-floaters');
+    if(floaters) floaters.style.display = (screenId === 'game-ui-screen') ? 'none' : 'block';
+
+    // Controlar Idiomas (só mostra no start-screen)
+    let langSel = document.getElementById('lang-selector');
+    if(langSel) langSel.style.display = (screenId === 'start-screen') ? 'flex' : 'none';
+}
+
+function restartCurrentGame() {
+    document.getElementById('end-game-menu').style.display = 'none';
+    document.getElementById('winner-text').style.display = 'none';
+    if(window.activeGame === 'pong') initPong3D();
+    if(window.activeGame === 'tennis') initTennis3D();
+    if(window.activeGame === 'moto') initMoto3D();
 }
 
 // Global Sensitivity Selection
@@ -256,6 +272,8 @@ function launchGame() {
 
 function backToMenu() {
     window.activeGame = null;
+    document.getElementById('end-game-menu').style.display = 'none';
+    document.getElementById('winner-text').style.display = 'none';
     if(typeof stopPong3D === 'function') stopPong3D();
     if(typeof stopTennis3D === 'function') stopTennis3D();
     if(typeof stopMoto3D === 'function') stopMoto3D();

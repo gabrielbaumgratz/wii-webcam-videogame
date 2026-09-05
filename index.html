@@ -89,7 +89,6 @@
             <div class="game-carousel">
                 <div class="game-card wii-btn glass-ui" onclick="openGameHub('pong')">
                     <h2>AIR HOCKEY 3D</h2>
-                    <p data-i18n="hockey_desc">Entre no Grid.</p>
                 </div>
                 
                 <div class="game-card wii-btn glass-ui" onclick="openGameHub('tennis')">
@@ -126,8 +125,10 @@
                 </div>
             </div>
 
-            <button class="wii-btn btn-primary glass-ui" onclick="launchGame()" data-i18n="btn_launch">INICIAR PROTOCOLO</button>
-            <button class="wii-btn btn-back glass-ui" onclick="navTo('select-screen')" data-i18n="btn_back">VOLTAR</button>
+            <div style="display: flex; gap: 20px;">
+                <button class="wii-btn btn-primary glass-ui" onclick="launchGame()" data-i18n="btn_launch">INICIAR PROTOCOLO</button>
+                <button class="wii-btn btn-back glass-ui" onclick="navTo('select-screen')" data-i18n="btn_back">VOLTAR</button>
+            </div>
         </div>
 
         <!-- IN-GAME HUD -->
@@ -137,7 +138,13 @@
                 <span id="p1-score-txt">0</span>
                 <span id="p2-score-txt">0</span>
             </div>
-            <div id="winner-text" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 5em; font-weight: 800; color: white; text-shadow: 0 0 30px #ffffff; text-align: center; text-transform: uppercase;"></div>
+            <div id="winner-text" style="display: none; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 5em; font-weight: 800; color: white; text-shadow: 0 0 30px #ffffff; text-align: center; text-transform: uppercase;"></div>
+            
+            <div id="end-game-menu" style="display: none; position: absolute; top: 60%; left: 50%; transform: translateX(-50%); z-index: 1000; text-align: center; flex-direction: column; gap: 20px;">
+                <button class="wii-btn btn-primary glass-ui" onclick="restartCurrentGame()">JOGAR NOVAMENTE</button>
+                <button class="wii-btn btn-back glass-ui" onclick="backToMenu()">SAIR</button>
+            </div>
+            
             <div id="pause-text" style="display: none; position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); font-size: 6em; font-weight: 800; color: #00ffcc; text-shadow: 0 0 30px #00ffcc; letter-spacing: 10px;">PAUSADO</div>
         </div>
 

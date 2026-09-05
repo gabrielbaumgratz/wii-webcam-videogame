@@ -194,6 +194,7 @@ function resetPongBall3D(lastScorer, showWin = false) {
         pongShowingWin = true;
         let winnerText = document.getElementById('winner-text');
         winnerText.style.display = 'block';
+        document.getElementById('end-game-menu').style.display = 'flex';
         if (window.playersMode === 2) {
             winnerText.innerText = (p1Score >= window.maxScore) ? "PLAYER 1 WINS!" : "PLAYER 2 WINS!";
         } else {
@@ -395,8 +396,8 @@ function initTennis3D() {
     gridHelper.visible = false;
     
     // Visão isométrica MAIS BAIXA nas costas do jogador
-    camera.position.set(0, 10, 35);
-    camera.lookAt(0, -5, 0);
+    camera.position.set(0, 3, 35);
+    camera.lookAt(0, 0, 0);
     
     tP1Score = 0; tP2Score = 0;
     updateTennisScoreHUD();
@@ -545,6 +546,7 @@ function winTennis(winner) {
     tennisShowingWin = true;
     let winnerText = document.getElementById('winner-text');
     winnerText.style.display = 'block';
+    document.getElementById('end-game-menu').style.display = 'flex';
     winnerText.innerText = (winner === 1) ? "USER WINS GAME!" : "SYSTEM WINS GAME!";
 }
 
@@ -658,9 +660,9 @@ function updateMoto3D() {
             motoShowingWin = true;
             let winnerText = document.getElementById('winner-text');
             winnerText.style.display = 'block';
+            document.getElementById('end-game-menu').style.display = 'flex';
             winnerText.innerText = "CRASHED! SCORE: " + Math.floor(mScore);
             winnerText.style.color = '#ff0055';
-            setTimeout(() => stopMoto3D(), 4000);
         }
         // Loop de obstáculo
         if (obs.position.z > 20) {
