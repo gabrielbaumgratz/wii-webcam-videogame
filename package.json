@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "tunnel": "npx localtunnel --port 8000",
-    "start:electron": "npx electron .",
+    "start:electron": ".\\node_modules\\.bin\\electron.cmd .",
     "build:exe": "electron-builder --win"
   },
   "build": {
