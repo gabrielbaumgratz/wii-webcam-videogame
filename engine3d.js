@@ -746,6 +746,8 @@ function animate() {
     if (pongActive) updatePong3D();
     if (tennisActive) updateTennis3D();
     if (motoActive) updateMoto3D();
+    if (bowlingActive) updateBowling3D();
+    if (shootActive) updateShoot3D();
     
     updateConfetti();
     
@@ -758,3 +760,331 @@ window.addEventListener('resize', () => {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
+
+// ==========================================
+// 🎳 BOLICHE 3D (Física Leve)
+// ==========================================
+let bowlingActive = false;
+let bowlingShowingWin = false;
+const bowlingGroup = new THREE.Group();
+scene.add(bowlingGroup);
+bowlingGroup.visible = false;
+
+// Pista de Boliche
+const blaneGeo = new THREE.PlaneGeometry(10, 60);
+const blaneMat = new THREE.MeshStandardMaterial({ color: 0xc8a96e, roughness: 0.6 });
+const blane = new THREE.Mesh(blaneGeo, blaneMat);
+blane.rotation.x = -Math.PI / 2;
+blane.position.y = -5;
+bowlingGroup.add(blane);
+
+// Calhas laterais
+const bgutterMat = new THREE.MeshStandardMaterial({ color: 0x555555 });
+const bgutterL = new THREE.Mesh(new THREE.BoxGeometry(2, 0.3, 60), bgutterMat);
+bgutterL.position.set(-6, -5, 0);
+const bgutterR = new THREE.Mesh(new THREE.BoxGeometry(2, 0.3, 60), bgutterMat);
+bgutterR.position.set(6, -5, 0);
+bowlingGroup.add(bgutterL, bgutterR);
+
+// Bola de Boliche
+const bowlBallGeo = new THREE.SphereGeometry(0.8, 16, 16);
+const bowlBallMat = new THREE.MeshStandardMaterial({ color: 0x111188, roughness: 0.2, metalness: 0.5 });
+const bowlBall = new THREE.Mesh(bowlBallGeo, bowlBallMat);
+bowlBall.position.set(0, -4.2, 22);
+bowlingGroup.add(bowlBall);
+
+// Pinos (10 pinos em triângulo)
+const bpinMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.4 });
+const bpinGeo = new THREE.CylinderGeometry(0.25, 0.4, 2, 8);
+const bpinPositions = [
+    [-3,-2.0,-20],[-1,-2.0,-20],[1,-2.0,-20],[3,-2.0,-20],
+    [-2,-2.0,-17],[0,-2.0,-17],[2,-2.0,-17],
+    [-1,-2.0,-14],[1,-2.0,-14],
+    [0,-2.0,-11]
+];
+let bpins = [];
+let bpinFalling = [];
+let bpinFallDir = [];
+for (let i = 0; i < 10; i++) {
+    const pin = new THREE.Mesh(bpinGeo, bpinMat);
+    pin.position.set(...bpinPositions[i]);
+    bowlingGroup.add(pin);
+    bpins.push(pin);
+    bpinFalling.push(false);
+    bpinFallDir.push((Math.random() - 0.5) * 2);
+}
+
+let bowlBallMoving = false;
+let bowlBallVelZ = 0;
+let bowlBallTargetX = 0;
+let bowlScore = 0;
+let bowlThrows = 0;
+let bowlPinsDown = 0;
+let bowlWaitingReset = false;
+let bowlResetTimer = 0;
+const BOWL_MAX_THROWS = 3;
+
+function initBowling3D() {
+    bowlingActive = true;
+    bowlingShowingWin = false;
+    bowlingGroup.visible = true;
+    particlesMesh.visible = false;
+    gridHelper.visible = false;
+
+    camera.position.set(0, 2, 30);
+    camera.lookAt(0, -2, -10);
+
+    bowlScore = 0; bowlThrows = 0; bowlPinsDown = 0;
+    bowlBallMoving = false; bowlWaitingReset = false;
+    bowlBall.position.set(0, -4.2, 22);
+    bowlBall.rotation.set(0,0,0);
+
+    // Reset pinos
+    for (let i = 0; i < 10; i++) {
+        bpins[i].position.set(...bpinPositions[i]);
+        bpins[i].rotation.set(0, 0, 0);
+        bpinFalling[i] = false;
+    }
+
+    document.getElementById('score-board').style.display = 'flex';
+    document.getElementById('p1-score-txt').innerText = '0';
+    document.getElementById('p2-score-txt').innerText = '⚪'.repeat(10);
+    document.getElementById('winner-text').style.display = 'none';
+    document.getElementById('end-game-menu').style.display = 'none';
+}
+
+function stopBowling3D() {
+    bowlingActive = false;
+    bowlingGroup.visible = false;
+    document.getElementById('score-board').style.display = 'none';
+    camera.position.set(0, 0, 30);
+    camera.lookAt(0, 0, 0);
+}
+
+function updateBowling3D() {
+    if (!bowlingActive || bowlingShowingWin || window.isPaused) return;
+
+    // Mira: mão controla X da bola quando não está se movendo
+    if (!bowlBallMoving && !bowlWaitingReset) {
+        bowlBallTargetX = -(window.hand1X - 0.5) * 8;
+        bowlBall.position.x += (bowlBallTargetX - bowlBall.position.x) * 0.15;
+
+        // Pinça = lançar
+        if (window.isPinching1) {
+            bowlBallMoving = true;
+            bowlBallVelZ = -0.6;
+            bowlThrows++;
+        }
+    }
+
+    // Bola em movimento
+    if (bowlBallMoving) {
+        bowlBall.position.z += bowlBallVelZ;
+        bowlBall.rotation.x -= 0.1;
+
+        // Detecção de colisão com pinos
+        for (let i = 0; i < 10; i++) {
+            if (!bpinFalling[i]) {
+                const dx = bowlBall.position.x - bpins[i].position.x;
+                const dz = bowlBall.position.z - bpins[i].position.z;
+                if (Math.sqrt(dx * dx + dz * dz) < 1.5) {
+                    bpinFalling[i] = true;
+                    bpinFallDir[i] = dx > 0 ? 1 : -1;
+                    bowlPinsDown++;
+                    // Efeito de cascata: pinos vizinhos caem também (simplificado)
+                    if (i > 0 && !bpinFalling[i-1] && Math.random() > 0.3) { bpinFalling[i-1] = true; bowlPinsDown++; }
+                    if (i < 9 && !bpinFalling[i+1] && Math.random() > 0.3) { bpinFalling[i+1] = true; bowlPinsDown++; }
+                }
+            }
+        }
+
+        // Bola saiu da pista
+        if (bowlBall.position.z < -28) {
+            bowlBallMoving = false;
+            const pinsDown = bpinFalling.filter(Boolean).length;
+            bowlScore += pinsDown * 10;
+            document.getElementById('p1-score-txt').innerText = bowlScore;
+
+            if (bowlThrows >= BOWL_MAX_THROWS || pinsDown === 10) {
+                bowlWaitingReset = true;
+                bowlResetTimer = 80;
+                setTimeout(() => {
+                    bowlingShowingWin = true;
+                    const winnerText = document.getElementById('winner-text');
+                    winnerText.style.display = 'block';
+                    winnerText.innerText = pinsDown === 10 ? '🎳 STRIKE!' : `SCORE: ${bowlScore}`;
+                    document.getElementById('end-game-menu').style.display = 'flex';
+                }, 2000);
+            } else {
+                bowlWaitingReset = true;
+                bowlResetTimer = 90;
+            }
+        }
+    }
+
+    // Animação de pinos caindo
+    for (let i = 0; i < 10; i++) {
+        if (bpinFalling[i] && bpins[i].rotation.z < Math.PI / 2) {
+            bpins[i].rotation.z += 0.05 * bpinFallDir[i];
+            bpins[i].position.y -= 0.02;
+        }
+    }
+
+    // Reset da bola
+    if (bowlWaitingReset) {
+        bowlResetTimer--;
+        if (bowlResetTimer <= 0) {
+            bowlWaitingReset = false;
+            bowlBall.position.set(0, -4.2, 22);
+            bowlBall.rotation.set(0, 0, 0);
+        }
+    }
+}
+
+// ==========================================
+// 🎯 TIRO AO ALVO 3D
+// ==========================================
+let shootActive = false;
+let shootShowingWin = false;
+const shootGroup = new THREE.Group();
+scene.add(shootGroup);
+shootGroup.visible = false;
+
+// Fundo da galeria
+const shootBgGeo = new THREE.PlaneGeometry(60, 30);
+const shootBgMat = new THREE.MeshStandardMaterial({ color: 0x1a0a00, roughness: 1 });
+const shootBg = new THREE.Mesh(shootBgGeo, shootBgMat);
+shootBg.position.z = -20;
+shootGroup.add(shootBg);
+
+// Trilho dos alvos
+const shootRailMat = new THREE.MeshStandardMaterial({ color: 0x888888 });
+const shootRail = new THREE.Mesh(new THREE.BoxGeometry(40, 0.3, 0.3), shootRailMat);
+shootRail.position.set(0, 2, -10);
+shootGroup.add(shootRail);
+
+// Alvos (círculos coloridos)
+const shootTargets = [];
+const shootTargetMat = new THREE.MeshBasicMaterial({ color: 0xff2200 });
+const shootTargetRingMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+for (let i = 0; i < 5; i++) {
+    const tGroup = new THREE.Group();
+    const outer = new THREE.Mesh(new THREE.CircleGeometry(1.2, 16), shootTargetRingMat);
+    const inner = new THREE.Mesh(new THREE.CircleGeometry(0.6, 16), shootTargetMat);
+    inner.position.z = 0.01;
+    tGroup.add(outer, inner);
+    tGroup.position.set(-20 + i * 10, 2, -10);
+    tGroup.userData = { speed: (0.05 + i * 0.02) * (Math.random() > 0.5 ? 1 : -1), hit: false };
+    shootGroup.add(tGroup);
+    shootTargets.push(tGroup);
+}
+
+// Mira (crosshair)
+const crossMat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+const crossH = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.1, 0.1), crossMat);
+const crossV = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1.2, 0.1), crossMat);
+const crossCenter = new THREE.Mesh(new THREE.CircleGeometry(0.15, 8), crossMat);
+crossCenter.position.z = 0.05;
+const crosshair = new THREE.Group();
+crosshair.add(crossH, crossV, crossCenter);
+crosshair.position.set(0, 0, -9);
+shootGroup.add(crosshair);
+
+let shootAmmo = 10;
+let shootScore = 0;
+let shootCooldown = 0;
+let lastPinch = false;
+
+function initShoot3D() {
+    shootActive = true;
+    shootShowingWin = false;
+    shootGroup.visible = true;
+    particlesMesh.visible = false;
+    gridHelper.visible = false;
+
+    camera.position.set(0, 2, 15);
+    camera.lookAt(0, 2, 0);
+
+    shootAmmo = 10; shootScore = 0; shootCooldown = 0; lastPinch = false;
+    shootTargets.forEach((t, i) => {
+        t.position.x = -20 + i * 10;
+        t.userData.hit = false;
+        t.userData.speed = (0.05 + i * 0.02) * (Math.random() > 0.5 ? 1 : -1);
+        t.scale.set(1, 1, 1);
+        t.children.forEach(c => c.visible = true);
+    });
+
+    document.getElementById('score-board').style.display = 'flex';
+    document.getElementById('p1-score-txt').innerText = '🎯 0';
+    document.getElementById('p2-score-txt').innerText = '🔫 10';
+    document.getElementById('winner-text').style.display = 'none';
+    document.getElementById('end-game-menu').style.display = 'none';
+}
+
+function stopShoot3D() {
+    shootActive = false;
+    shootGroup.visible = false;
+    document.getElementById('score-board').style.display = 'none';
+    camera.position.set(0, 0, 30);
+    camera.lookAt(0, 0, 0);
+}
+
+function updateShoot3D() {
+    if (!shootActive || shootShowingWin || window.isPaused) return;
+
+    // Mira segue a mão
+    crosshair.position.x = -(window.hand1X - 0.5) * 28;
+    crosshair.position.y = -(window.hand1Y - 0.5) * 16 + 2;
+
+    // Alvos se movem
+    shootTargets.forEach(t => {
+        if (!t.userData.hit) {
+            t.position.x += t.userData.speed;
+            if (t.position.x > 21 || t.position.x < -21) t.userData.speed *= -1;
+        }
+    });
+
+    // Tiro com pinça
+    if (shootCooldown > 0) shootCooldown--;
+    const pinching = window.isPinching1;
+    if (pinching && !lastPinch && shootCooldown === 0 && shootAmmo > 0) {
+        shootAmmo--;
+        shootCooldown = 20;
+        document.getElementById('p2-score-txt').innerText = '🔫 ' + shootAmmo;
+
+        // Detecção de acerto
+        let hit = false;
+        shootTargets.forEach(t => {
+            if (!t.userData.hit) {
+                const dx = crosshair.position.x - t.position.x;
+                const dy = crosshair.position.y - t.position.y;
+                if (Math.sqrt(dx*dx + dy*dy) < 1.4) {
+                    t.userData.hit = true;
+                    shootScore += 100;
+                    t.scale.set(0.01, 0.01, 0.01);
+                    document.getElementById('p1-score-txt').innerText = '🎯 ' + shootScore;
+                    hit = true;
+                }
+            }
+        });
+
+        if (shootAmmo <= 0) {
+            setTimeout(() => {
+                shootShowingWin = true;
+                const winnerText = document.getElementById('winner-text');
+                winnerText.style.display = 'block';
+                const allHit = shootTargets.every(t => t.userData.hit);
+                winnerText.innerText = allHit ? '🎯 PERFECT SHOT!' : `SCORE: ${shootScore}`;
+                document.getElementById('end-game-menu').style.display = 'flex';
+            }, 500);
+        }
+    }
+    lastPinch = pinching;
+}
+
+// ==========================================
+// 🥁 BATERIA VIRTUAL (Modo Livre + Guitar Hero)
+// ==========================================
+// A bateria é uma sobreposição HTML pura, sem Three.js
+// Gerenciada por drumInit/stopDrum em app.js
+

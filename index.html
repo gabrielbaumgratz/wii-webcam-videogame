@@ -97,13 +97,20 @@
                 <div class="game-card wii-btn glass-ui" onclick="openGameHub('pong')">
                     <h2>AIR HOCKEY 3D</h2>
                 </div>
-                
                 <div class="game-card wii-btn glass-ui" onclick="openGameHub('tennis')">
                     <h2 data-i18n="tennis_title">TÊNIS DE QUADRA</h2>
                 </div>
-                
                 <div class="game-card wii-btn glass-ui" onclick="openGameHub('moto')">
                     <h2 data-i18n="moto_title">MOTO RACER</h2>
+                </div>
+                <div class="game-card wii-btn glass-ui" onclick="openGameHub('bowling')">
+                    <h2>🎳 BOLICHE 3D</h2>
+                </div>
+                <div class="game-card wii-btn glass-ui" onclick="openGameHub('shoot')">
+                    <h2>🎯 TIRO AO ALVO</h2>
+                </div>
+                <div class="game-card wii-btn glass-ui" onclick="openGameHub('drums')">
+                    <h2>🥁 BATERIA</h2>
                 </div>
             </div>
             
@@ -145,11 +152,21 @@
                 <span id="p1-score-txt">0</span>
                 <span id="p2-score-txt">0</span>
             </div>
-            <div id="winner-text" style="display: none; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 5em; font-weight: 800; color: white; text-shadow: 0 0 30px #ffffff; text-align: center; text-transform: uppercase;"></div>
+            <h2 id="winner-text" style="position: absolute; top: 40%; width: 100%; text-align: center; color: #ffaa00; font-size: 60px; text-shadow: 0px 5px 15px rgba(0,0,0,0.8); display: none; z-index: 200;">PLAYER 1 WINS!</h2>
             
-            <div id="end-game-menu" style="display: none; position: absolute; top: 60%; left: 50%; transform: translateX(-50%); z-index: 1000; text-align: center; flex-direction: column; gap: 20px;">
+            <div id="end-game-menu" style="position: absolute; top: 55%; width: 100%; display: none; flex-direction: column; align-items: center; gap: 20px; z-index: 200;">
                 <button class="wii-btn btn-primary glass-ui" onclick="restartCurrentGame()">JOGAR NOVAMENTE</button>
                 <button class="wii-btn btn-back glass-ui" onclick="backToMenu()">SAIR</button>
+            </div>
+
+            <!-- BATERIA UI Overlay -->
+            <div id="drum-ui" style="display: none; position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 100;">
+                <div class="drum-pad" id="drum-crash" style="position: absolute; top: 10%; left: 10%; width: 150px; height: 150px; border-radius: 50%; border: 5px solid rgba(0,255,255,0.3); display: flex; justify-content: center; align-items: center; font-size: 30px; font-weight: bold; color: rgba(0,255,255,0.7); transition: all 0.1s;">CRASH</div>
+                <div class="drum-pad" id="drum-hihat" style="position: absolute; top: 40%; left: 10%; width: 150px; height: 150px; border-radius: 50%; border: 5px solid rgba(255,255,0,0.3); display: flex; justify-content: center; align-items: center; font-size: 30px; font-weight: bold; color: rgba(255,255,0,0.7); transition: all 0.1s;">HI-HAT</div>
+                <div class="drum-pad" id="drum-snare" style="position: absolute; top: 60%; left: 30%; width: 150px; height: 150px; border-radius: 50%; border: 5px solid rgba(255,0,0,0.3); display: flex; justify-content: center; align-items: center; font-size: 30px; font-weight: bold; color: rgba(255,0,0,0.7); transition: all 0.1s;">SNARE</div>
+                <div class="drum-pad" id="drum-tom" style="position: absolute; top: 30%; left: 45%; width: 150px; height: 150px; border-radius: 50%; border: 5px solid rgba(0,255,0,0.3); display: flex; justify-content: center; align-items: center; font-size: 30px; font-weight: bold; color: rgba(0,255,0,0.7); transition: all 0.1s;">TOM</div>
+                <div class="drum-pad" id="drum-kick" style="position: absolute; top: 60%; right: 30%; width: 150px; height: 150px; border-radius: 50%; border: 5px solid rgba(255,0,255,0.3); display: flex; justify-content: center; align-items: center; font-size: 30px; font-weight: bold; color: rgba(255,0,255,0.7); transition: all 0.1s;">KICK</div>
+                <div class="drum-pad" id="drum-ride" style="position: absolute; top: 20%; right: 10%; width: 150px; height: 150px; border-radius: 50%; border: 5px solid rgba(255,165,0,0.3); display: flex; justify-content: center; align-items: center; font-size: 30px; font-weight: bold; color: rgba(255,165,0,0.7); transition: all 0.1s;">RIDE</div>
             </div>
             
             <div id="pause-text" style="display: none; position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); font-size: 6em; font-weight: 800; color: #00ffcc; text-shadow: 0 0 30px #00ffcc; letter-spacing: 10px;">PAUSADO</div>

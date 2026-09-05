@@ -217,13 +217,20 @@ function setSensitivity(sens, btnElement) {
 // Game Hub specific settings
 function openGameHub(gameId) {
     pendingGame = gameId;
-    let title = gameId === 'pong' ? 'AIR HOCKEY 3D' : (gameId === 'tennis' ? 'COURT TENNIS' : 'MOTO RACER');
+    let title = '';
+    if (gameId === 'pong') title = 'AIR HOCKEY 3D';
+    else if (gameId === 'tennis') title = 'COURT TENNIS';
+    else if (gameId === 'moto') title = 'MOTO RACER';
+    else if (gameId === 'bowling') title = 'BOLICHE 3D';
+    else if (gameId === 'shoot') title = 'TIRO AO ALVO';
+    else if (gameId === 'drums') title = 'BATERIA VIRTUAL';
+    
     document.getElementById('game-hub-title').innerText = title + ' CONFIG';
     
-    // Desabilitar co-op local para Tennis e Moto Racer
+    // Desabilitar co-op local para Singleplayer only
     let playersContainer = document.getElementById('players-config-container');
     if (playersContainer) {
-        if (gameId === 'moto' || gameId === 'tennis') {
+        if (gameId === 'moto' || gameId === 'tennis' || gameId === 'bowling' || gameId === 'shoot' || gameId === 'drums') {
             playersContainer.style.display = 'none';
             window.gameConfigs[pendingGame].mode = 1; // Força Singleplayer
         } else {
@@ -264,6 +271,12 @@ function launchGame() {
         initTennis3D();
     } else if (pendingGame === 'moto' && typeof initMoto3D === 'function') {
         initMoto3D();
+    } else if (pendingGame === 'bowling' && typeof initBowling3D === 'function') {
+        initBowling3D();
+    } else if (pendingGame === 'shoot' && typeof initShoot3D === 'function') {
+        initShoot3D();
+    } else if (pendingGame === 'drums') {
+        initDrum();
     } else {
         document.getElementById('winner-text').style.display = 'block';
         document.getElementById('winner-text').innerText = translations[window.currentLang].game_offline;
@@ -277,7 +290,115 @@ function backToMenu() {
     if(typeof stopPong3D === 'function') stopPong3D();
     if(typeof stopTennis3D === 'function') stopTennis3D();
     if(typeof stopMoto3D === 'function') stopMoto3D();
+    if(typeof stopBowling3D === 'function') stopBowling3D();
+    if(typeof stopShoot3D === 'function') stopShoot3D();
+    stopDrum();
     navTo('select-screen');
+}
+
+// ==========================================
+// 🥁 BATERIA VIRTUAL LOGIC (Overlay HTML + Web Audio API)
+// ==========================================
+let audioCtx = null;
+let drumActive = false;
+let drumScore = 0;
+let lastDrumHit = {}; // { id: time }
+
+const drumPadsConfig = {
+    'drum-crash': { freq: 800, type: 'sawtooth', decay: 1.5, element: null },
+    'drum-hihat': { freq: 600, type: 'square', decay: 0.1, element: null },
+    'drum-snare': { freq: 200, type: 'triangle', decay: 0.2, element: null },
+    'drum-tom': { freq: 150, type: 'sine', decay: 0.4, element: null },
+    'drum-kick': { freq: 60, type: 'sine', decay: 0.5, element: null },
+    'drum-ride': { freq: 1000, type: 'sine', decay: 1.0, element: null }
+};
+
+function initDrum() {
+    drumActive = true;
+    drumScore = 0;
+    document.getElementById('score-board').style.display = 'flex';
+    document.getElementById('p1-score-txt').innerText = '🥁 0';
+    document.getElementById('p2-score-txt').innerText = 'MODO RITMO';
+    document.getElementById('drum-ui').style.display = 'block';
+    
+    // Ocultar cenário 3D temporariamente (Fundo fica do WebGL)
+    particlesMesh.visible = true;
+    gridHelper.visible = false;
+    
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    for (let id in drumPadsConfig) {
+        drumPadsConfig[id].element = document.getElementById(id);
+    }
+    
+    requestAnimationFrame(updateDrumLogic);
+}
+
+function stopDrum() {
+    drumActive = false;
+    document.getElementById('drum-ui').style.display = 'none';
+    document.getElementById('score-board').style.display = 'none';
+}
+
+function playDrumSound(config) {
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    
+    osc.type = config.type;
+    osc.frequency.setValueAtTime(config.freq, audioCtx.currentTime);
+    
+    // Efeito percussivo de prato/caixa adicionando ruído (noise simples com oscilador para simplificar)
+    if (config.type === 'square' || config.type === 'sawtooth') {
+        osc.detune.setValueAtTime(Math.random() * 1000 - 500, audioCtx.currentTime);
+    }
+    
+    gainNode.gain.setValueAtTime(1, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + config.decay);
+    
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + config.decay);
+}
+
+function updateDrumLogic() {
+    if (!drumActive) return;
+    
+    let handX = window.hand1X * window.innerWidth;
+    let handY = window.hand1Y * window.innerHeight;
+    
+    const now = Date.now();
+    let hitSomething = false;
+    
+    for (let id in drumPadsConfig) {
+        const conf = drumPadsConfig[id];
+        const el = conf.element;
+        if (!el) continue;
+        
+        const rect = el.getBoundingClientRect();
+        const isInPad = (handX >= rect.left && handX <= rect.right && handY >= rect.top && handY <= rect.bottom);
+        
+        if (isInPad) {
+            el.style.backgroundColor = 'rgba(255,255,255,0.4)';
+            el.style.transform = 'scale(1.1)';
+            
+            if (!lastDrumHit[id] || (now - lastDrumHit[id] > 200)) {
+                lastDrumHit[id] = now;
+                playDrumSound(conf);
+                hitSomething = true;
+                
+                // Modo ritmo simples
+                drumScore += 10;
+                document.getElementById('p1-score-txt').innerText = '🥁 ' + drumScore;
+            }
+        } else {
+            el.style.backgroundColor = 'transparent';
+            el.style.transform = 'scale(1)';
+        }
+    }
+    
+    requestAnimationFrame(updateDrumLogic);
 }
 
 // ==========================================
