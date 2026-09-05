@@ -560,13 +560,54 @@ let motoGroup = new THREE.Group();
 scene.add(motoGroup);
 motoGroup.visible = false;
 
-// Moto Asset (Neon)
-const motoTex = textureLoader.load('assets/moto.jpg');
-const motoMat = new THREE.MeshBasicMaterial({ map: motoTex, transparent: true, blending: THREE.AdditiveBlending });
-const playerMoto = new THREE.Mesh(new THREE.PlaneGeometry(6, 6), motoMat);
-playerMoto.rotation.x = -Math.PI / 2;
-playerMoto.position.set(0, -4.9, 10); // LARGADA ESTÁTICA
+// Jogador (Moto 3D Real)
+const playerMoto = new THREE.Group();
+playerMoto.position.set(0, -4.9, 10);
 motoGroup.add(playerMoto);
+
+// Carrega o modelo da Moto
+new THREE.MTLLoader().setPath('assets/moto_model/').load('moto_simple_1.mtl', function (materials) {
+    materials.preload();
+    new THREE.OBJLoader()
+        .setMaterials(materials)
+        .setPath('assets/moto_model/')
+        .load('moto_simple_1.obj', function (object) {
+            object.scale.set(0.015, 0.015, 0.015); // A moto é gigante
+            playerMoto.add(object);
+        });
+});
+
+let carModelTemplate = null;
+let obstacles = [];
+// Carrega o modelo do Carro FBX
+new THREE.FBXLoader().load('assets/car_model/Low Poly Cars (Free)_fbx/Models/car_1.fbx', function (object) {
+    const carTex = new THREE.TextureLoader().load('assets/car_model/Low Poly Cars (Free)_fbx/Textures/Car Texture 1.png');
+    object.traverse(function (child) {
+        if (child.isMesh) {
+            child.material = new THREE.MeshStandardMaterial({ map: carTex });
+        }
+    });
+    object.scale.set(0.01, 0.01, 0.01);
+    object.rotation.y = Math.PI; // Carros vindo na contramão
+    carModelTemplate = object;
+    
+    // Substitui os obstáculos pelos carros carregados
+    obstacles.forEach(o => motoGroup.remove(o));
+    obstacles = [];
+    
+    for(let i=0; i<10; i++) {
+        let obs;
+        if (carModelTemplate) {
+            obs = carModelTemplate.clone();
+            obs.position.set((Math.random() - 0.5) * 30, -5, -100 - (Math.random() * 200));
+        } else {
+            obs = new THREE.Mesh(new THREE.BoxGeometry(4, 2, 4), new THREE.MeshStandardMaterial({ color: 0xff0055 }));
+            obs.position.set((Math.random() - 0.5) * 30, -4, -100 - (Math.random() * 200));
+        }
+        motoGroup.add(obs);
+        obstacles.push(obs);
+    }
+});
 
 // Pista Cyberpunk (Infinito)
 const roadGeom = new THREE.PlaneGeometry(40, 200);
@@ -576,10 +617,9 @@ road.rotation.x = -Math.PI / 2;
 road.position.y = -5;
 motoGroup.add(road);
 
-// Obstáculos
+// Obstáculos Fallback (Caixas Vermelhas)
 const obsGeom = new THREE.BoxGeometry(4, 2, 4);
 const obsMat = new THREE.MeshStandardMaterial({ color: 0xff0055 });
-let obstacles = [];
 for(let i=0; i<10; i++) {
     let obs = new THREE.Mesh(obsGeom, obsMat);
     obs.position.set((Math.random() - 0.5) * 30, -4, -100 - (Math.random() * 200));
@@ -610,9 +650,23 @@ function initMoto3D() {
     document.getElementById('p2-score-txt').innerText = "";
     document.getElementById('score-board').style.display = 'flex';
     document.getElementById('winner-text').style.display = 'none';
+    document.getElementById('end-game-menu').style.display = 'none';
 
-    // Reset obstáculos
-    obstacles.forEach((o, i) => { o.position.set((Math.random() - 0.5) * 30, -4, -50 - (i * 40)); });
+    // Respawn dos obstáculos ao iniciar o jogo
+    obstacles.forEach(o => motoGroup.remove(o));
+    obstacles = [];
+    for(let i=0; i<10; i++) {
+        let obs;
+        if (carModelTemplate) {
+            obs = carModelTemplate.clone();
+            obs.position.set((Math.random() - 0.5) * 30, -5, -100 - (Math.random() * 200));
+        } else {
+            obs = new THREE.Mesh(new THREE.BoxGeometry(4, 2, 4), new THREE.MeshStandardMaterial({ color: 0xff0055 }));
+            obs.position.set((Math.random() - 0.5) * 30, -4, -100 - (Math.random() * 200));
+        }
+        motoGroup.add(obs);
+        obstacles.push(obs);
+    }
 }
 
 function stopMoto3D() {
